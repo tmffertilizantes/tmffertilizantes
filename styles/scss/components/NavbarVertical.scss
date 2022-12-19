@@ -1,0 +1,16 @@
+.navbar-vertical {
+  background-color: var(--bs-primary);
+  border-color: #113c23;
+
+  .navbar-nav {
+    .nav-item {
+      .nav-link {
+        color: #b7ccbe;
+      }
+    }
+
+    .nav-divider {
+      border-color: rgb(60 93 74 / 50%);
+    }
+  }
+}

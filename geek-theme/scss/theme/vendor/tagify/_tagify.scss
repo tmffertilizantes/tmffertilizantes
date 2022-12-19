@@ -1,0 +1,28 @@
+// Tagify
+
+.tagify {
+  border-color: $gray-200;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  --tag-bg: $light-primary;
+  --tag-hover: $dark-primary;
+  --tag-invalid-color: $light-danger;
+  --tag-text-color: $dark;
+  --tags-focus-border-color: $primary;
+  &__tag {
+    &:hover:not([readonly]) {
+      & div::before {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        box-shadow: 0 0 0 1.1em $gray-400 inset;
+        box-shadow: 0 0 0 var(--tag-inset-shadow-size, 1.1em) var(--tag-hover, $gray-400) inset;
+      }
+    }
+  }
+}
+.tagify--focus {
+  border-color: $primary !important;
+  box-shadow: 0px 0px 0px 3px rgba(231, 225, 253, 0.75);
+}

@@ -1,0 +1,335 @@
+//
+// Theme Docs
+//
+
+// Docs header
+
+.docs-header {
+  .docs-header-btn {
+    display: flex;
+    align-items: center;
+  }
+  .navbar {
+    z-index: 1022;
+    margin-left: 15.625rem;
+    box-shadow: 0px -9px 49px rgba(22, 20, 37, 0.12), 0px -2.71324px 14.7721px rgba(22, 20, 37, 0.14),
+      0px -1.12694px 6.13556px rgba(22, 20, 37, 0.16), 0px -0.407592px 2.21911px rgba(22, 20, 37, 0.18);
+    @media (max-width: 576px) {
+      margin-left: 0rem;
+    }
+    .dropdown-menu {
+      margin: 0rem;
+      border: 1px solid rgb(239, 238, 241);
+    }
+    .navbar-nav {
+      .nav-item {
+        .nav-link {
+          font-size: 1rem;
+          line-height: 1.75rem;
+          padding: 0.875rem;
+          margin-bottom: 0rem;
+          color: $gray-700;
+
+          &:hover {
+            color: $black;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Docs Sidebar
+
+.docs-nav-sidebar {
+  position: fixed;
+  width: 15.625rem;
+  height: 100%;
+  top: 0px;
+  font-weight: 500;
+  background-color: $white;
+  z-index: 22;
+  border-right: 1px solid $gray-200;
+  .navbar-brand {
+    padding: 14px 20px 10px 20px;
+    margin-right: 0rem;
+  }
+  .docs-nav {
+    height: calc(100% - 6.5rem) !important;
+    overflow-y: auto;
+  }
+  .navbar {
+    padding: 0rem;
+  }
+  .navbar-nav {
+    min-width: 100%;
+    @media (max-width: 375px) {
+      padding-top: 25px;
+    }
+
+    .navbar-header {
+      margin-bottom: 1rem;
+      padding: 0rem 1.25rem;
+      margin-top: 1.5625rem;
+      font-size: 0.75rem;
+      .heading {
+        font-size: 1rem;
+        text-transform: capitalize;
+        font-weight: 600;
+        color: $gray-800;
+        margin-bottom: 0rem;
+      }
+    }
+    .navbar-border {
+      border-bottom: 1px solid $gray-200;
+      margin: 1.25rem 0rem;
+    }
+    .nav-item {
+      .nav-link {
+        color: $gray-600;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        padding: 0.275rem 0.675rem;
+        font-family: $font-family-sans-serif;
+        font-weight: 500;
+        margin: 0.05rem 1.25rem;
+        border-radius: $border-radius;
+
+        &:hover {
+          color: $primary;
+          background-color: rgba(227, 220, 255, 50%);
+        }
+      }
+      .nav-link.active {
+        color: $primary;
+        background-color: rgba(227, 220, 255, 50%);
+      }
+    }
+  }
+
+  // Nav footer
+
+  .nav-footer {
+    border-top: 1px solid $gray-200;
+    padding: 0.875rem 1.5rem;
+    position: absolute;
+    bottom: 0;
+    background-color: $white;
+    width: 100%;
+  }
+}
+
+// Sidebar
+
+.sidebar-nav-fixed {
+  position: sticky;
+  top: 4rem;
+  height: calc(100vh - 2rem);
+  overflow-y: auto;
+  padding-top: 4.0625rem;
+  border-left: 1px solid $gray-300;
+  ul {
+    list-style: none;
+    li {
+      a {
+        font-size: 0.8125rem;
+        color: $gray-600;
+        display: block;
+        padding: 0.125rem 1.5rem;
+        background: transparent;
+        border-radius: 0px;
+        border-left: 2px solid transparent;
+        line-height: 1.4375rem;
+        text-decoration: none;
+        transition: 0.5s ease;
+        &:hover {
+          color: $primary;
+        }
+      }
+      a.active {
+        display: block;
+        color: $primary;
+        background: transparent !important;
+        text-decoration: none;
+        border-left-color: $primary;
+        transition: 0.5s ease;
+      }
+      ul {
+        list-style: none;
+        padding-left: 0rem;
+        li {
+          a {
+            padding: 0.125rem 2.5rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// layouts
+// Doc section head
+
+// Docs Main wrapper
+
+.docs-main-wrapper {
+  min-height: 100%;
+  position: relative;
+}
+
+// Docs wrapper
+
+.docs-wrapper {
+  position: relative;
+  left: 0;
+  margin-left: 15.625rem;
+  top: 35px;
+}
+.docs-content {
+  margin: 6rem 4rem;
+}
+.docs-content-head {
+  padding: 4.375rem 0rem;
+}
+
+// Static modal
+
+.gd-example-modal.modal {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  z-index: 1;
+  display: block;
+}
+
+// Scrollspy
+
+.scrollspy-example {
+  position: relative;
+  height: 12.5rem;
+  margin-top: 0.5rem;
+  overflow: auto;
+}
+.scrollspy-example-2 {
+  position: relative;
+  height: 21.875rem;
+  overflow: auto;
+}
+
+// Toast
+
+.toast.hide {
+  display: none;
+}
+
+// Color Swatch
+
+.color-swatch {
+  margin-bottom: 1.875rem;
+}
+.color-swatch-header {
+  border-radius: 0.5rem;
+  height: 4.5rem;
+}
+.color-swatch-body {
+  margin-top: 0.875rem;
+  line-height: 1;
+}
+.color-swatch-body-label {
+  margin-bottom: 0.25rem;
+}
+.color-swatch-body-value {
+  margin-bottom: 0rem;
+}
+
+// Docs border utils
+
+.docs-example-border-utils {
+  [class^="border"] {
+    display: inline-block;
+    width: 5rem;
+    height: 5rem;
+    margin: 0.25rem;
+    background-color: $gray-100;
+  }
+}
+.docs-example-border-utils-0 {
+  [class^="border"] {
+    border: 1px solid $gray-300;
+  }
+}
+:focus {
+  outline: 0;
+}
+
+// Docs breakpoints
+@media only screen and (max-width: 1400px) {
+  .docs-content {
+    margin: 6rem 0rem;
+  }
+}
+@media only screen and (max-width: 1200px) {
+  .docs-content {
+    margin: 5rem 3rem;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .docs-content {
+    margin: 5rem 3rem;
+  }
+}
+@media only screen and (max-width: 480px) {
+  // Docs nav sidebar
+  .docs-nav-sidebar {
+    .top-search-bar {
+      padding: 1.25rem;
+      border-bottom: 1px solid $gray-300;
+      margin-top: 2.875rem;
+    }
+    .navbar-toggler {
+      background-color: $white;
+    }
+    width: 100%;
+    position: relative;
+    right: 0rem;
+  }
+
+  // Docs wrapper
+
+  .docs-wrapper {
+    margin-left: 0rem;
+  }
+  .docs-main-wrapper {
+    .main-content {
+      margin-left: 0rem;
+      width: auto;
+    }
+  }
+  .docs-content {
+    margin: 1rem;
+  }
+}
+
+// ratio
+
+.ratio {
+  display: inline-block;
+  width: 10rem;
+  color: $gray-600;
+  background-color: $gray-100;
+  border: 1px solid $gray-300;
+}
+
+// docs nav
+
+.docs-content {
+  .nav-line-bottom {
+    .nav-item {
+      .nav-link {
+        padding: 0.75rem;
+      }
+    }
+  }
+}

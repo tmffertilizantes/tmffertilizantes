@@ -1,0 +1,22 @@
+//
+// Extended from Bootstrap
+//
+
+// Form label
+
+.form-label {
+  color: $dark;
+}
+
+// Form control simple
+
+.form-control-simple {
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+// No Resize for textarea
+.no-resize {
+  resize: none;
+}

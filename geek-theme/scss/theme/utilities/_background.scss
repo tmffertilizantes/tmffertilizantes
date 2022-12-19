@@ -1,0 +1,46 @@
+//
+// Extended from bootstrap
+//
+
+// Background
+
+// bg cover
+
+.bg-cover {
+    background: no-repeat center center / cover;
+}
+
+// bg grayscale
+
+.bg-grayscale {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+
+
+.bg-colors-gradient{
+    background: linear-gradient(280.04deg, #BAA9FB 0%, #DBBEFF 48.96%, #FFE0E0 100%)
+}
+
+// bg auto
+
+.bg-auto {
+    @media (max-width: 1200px) {
+        background-size: auto !important;
+    }
+}
+
+// dot pattern
+
+.dot-pattern {
+    position: relative;
+    &:after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background: url(../../../images/pattern/dots-pattern.svg) no-repeat;
+        top: 0;
+        right: 0;
+    }
+}

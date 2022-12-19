@@ -1,0 +1,79 @@
+// Extended from dattables
+
+
+table.dataTable > thead {
+	> tr {
+		> th,
+		> td {
+			&:active {
+				outline: none;
+			}
+
+			&:not(.sorting_disabled) {
+				padding-right: 30px;
+			}
+		}
+	}
+
+	.sorting,
+	.sorting_asc,
+	.sorting_desc,
+	.sorting_asc_disabled,
+	.sorting_desc_disabled {
+		cursor: pointer;
+		position: relative;
+
+		&:before,
+		&:after {
+			position: absolute;
+			bottom: 0.9em;
+			display: block;
+			opacity: 0.3;
+		}
+
+		&:before {
+			right: 1.2em;
+			content: "\2191"; // up arrow - ascending
+		}
+
+		&:after {
+			right: 0.4em;
+			content: "\2193"; // down arrow - descending
+		}
+	}
+
+	.sorting_asc:before,
+	.sorting_desc:after {
+		opacity: 1;
+	}
+
+	.sorting_asc_disabled:before,
+	.sorting_desc_disabled:after {
+		opacity: 0;
+	}
+}
+
+div.dataTables_wrapper div.dataTables_info {
+    padding-top: 0.85em;
+	margin-bottom: .5rem;
+
+}
+
+@media (max-width: 768px){
+	li.paginate_button {
+		display: none;
+	}
+	}
+
+
+	@media (max-width: 768px){
+	li.paginate_button.next, li.paginate_button.previous {
+		display: inline-block;
+
+	}
+	div.dataTables_wrapper div.dataTables_filter input {
+		margin-left: .5em;
+		display: inline-block;
+		width: 64%;
+	}
+	}

@@ -1,0 +1,73 @@
+//
+// Extend from bootstrap
+//
+
+// Table
+
+.table-invoice.card {
+  border-radius: 0.625rem;
+  .table {
+    margin-bottom: 0rem;
+  }
+  .table thead th {
+    vertical-align: middle;
+    border-bottom: 1px solid $gray-200;
+    padding: 1rem 1.25rem;
+  }
+  .table th,
+  .table td {
+    padding: 0.4375rem;
+    vertical-align: top;
+    border-top: 1px solid $gray-200;
+    font-size: 0.875rem;
+  }
+  .table td {
+    padding: 1.0625rem;
+  }
+  .table tr:first-child th:first-child {
+    border-top-left-radius: 0.625rem;
+  }
+  .table tr:first-child th:last-child {
+    border-top-right-radius: 0.625rem;
+  }
+  .table tr:first-child th,
+  .card .table tr:first-child td {
+    border-top: 0px;
+  }
+}
+
+
+// .table.table-dark thead th {
+//   background-color: $gray-800;
+// }
+
+
+.table thead th {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.75rem;
+
+}
+
+
+
+// table light
+
+.table-light {
+  th {
+    color: $table-head-color;
+
+  }
+}
+
+
+
+// table lg
+
+.table-lg {
+  th,
+  td {
+    padding: $table-cell-padding-y-lg $table-cell-padding-x-lg;
+  }
+}

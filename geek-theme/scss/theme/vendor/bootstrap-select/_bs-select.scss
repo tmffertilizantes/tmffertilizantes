@@ -1,0 +1,22 @@
+// Bootstrap select
+
+
+.bootstrap-select {
+  >.dropdown-toggle {
+    background-color: $white !important;
+    border-color: $gray-300 !important;
+    font-weight: 400;
+  }
+  >select.mobile-device:focus+.dropdown-toggle,
+  .dropdown-toggle:focus {
+    outline: none !important;
+  }
+  .bs-placeholder {
+    color: $gray-500 !important;
+    &:hover,
+    &:focus,
+    &:active {
+      color: $gray-500 !important;
+    }
+  }
+}

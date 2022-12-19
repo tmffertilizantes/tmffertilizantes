@@ -1,0 +1,79 @@
+// Tiny slider
+
+
+.controls {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    position: absolute;
+    left: 0;
+    font-size: 18px;
+    width: 100%;
+    top: 50%;
+    transform: translatey(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    @media(max-width: 768px){
+      position: absolute;
+      bottom: -50px;
+      justify-content: center;
+      top: inherit;
+    }
+    &:focus {
+      outline: none;
+    }
+    li {
+      cursor: pointer;
+      &.prev {
+        position: relative;
+        background-color: $white;
+        height: 40px;
+        width: 40px;
+        margin-left: -50px;
+        border-radius: 50%;
+        line-height: 40px;
+        text-align: center;
+        border:1px solid $gray-200;
+        transition: 0.2s ease-in;
+        color: $gray-400;
+        @media(max-width: 768px){
+          margin-right: 5px;
+        }
+        &:hover{
+          background-color: $primary;
+          color: $white;
+          border-color: $primary;
+
+        }
+      }
+      &.next {
+        position: relative;
+        background-color: $white;
+        height: 40px;
+        width: 40px;
+        margin-right: -50px;
+        border-radius: 50%;
+        line-height: 40px;
+        text-align: center;
+        border:1px solid $gray-200;
+        transition: 0.2s ease-in;
+        color: $gray-400;
+        @media(max-width: 768px){
+          margin-left: 5px;
+        }
+        &:hover{
+          background-color: $primary;
+          color: $white;
+          border-color: $primary;
+        }
+      }
+    }
+  }
+  .controls-testimonial{
+    position: absolute;
+    bottom: -100px;
+    justify-content: center;
+    top: inherit;
+
+  }

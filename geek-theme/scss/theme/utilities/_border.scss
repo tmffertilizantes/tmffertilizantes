@@ -1,0 +1,51 @@
+//
+// Extend from Bootstrap
+//
+
+// Border
+
+.rounded-top-left-0 {
+  border-top-left-radius: 0px !important;
+}
+.rounded-top-end-0 {
+  border-top-right-radius: 0px !important;
+}
+
+// Responsive breakpoint for rounded none
+
+@media (max-width: 576px) {
+  .rounded-none.rounded-bottom-md {
+    border-bottom-right-radius: 0rem !important;
+    border-bottom-left-radius: 0rem !important;
+  }
+}
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .rounded-none.rounded-bottom-md {
+    border-bottom-right-radius: 0rem !important;
+    border-bottom-left-radius: 0rem !important;
+  }
+}
+
+// Border dashed
+
+.border-dashed {
+  border: 2px dashed $gray-200 !important;
+}
+
+// Border timeline activity line
+
+.list-timeline-activity {
+  position: relative;
+  z-index: 1;
+  .list-group-item:not(:last-child) {
+    &::before {
+      content: "";
+      position: absolute;
+      top: 1rem;
+      left: 1.25rem;
+      height: 100%;
+      border-left: 1px solid $gray-300;
+     
+    }
+  }
+}

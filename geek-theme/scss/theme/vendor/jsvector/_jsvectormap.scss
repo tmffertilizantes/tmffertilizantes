@@ -1,0 +1,134 @@
+// jsvectormap
+
+@keyframes jvm-line-animation {
+    from {
+        stroke-dashoffset: 250;
+    }
+}
+
+svg {
+    -ms-touch-action: none;
+    touch-action: none;
+}
+
+image {
+    -ms-user-select: none;
+    user-select: none;
+}
+
+text {
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.jvm-zoomin {
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.jvm-zoomout {
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.jvm-container {
+    -ms-touch-action: none;
+    touch-action: none;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+}
+
+.jvm-tooltip {
+    border-radius: 3px;
+    background-color: $white;
+    font-family: "Inter", "sans-serif" !important;
+    font-size: smaller;
+    box-shadow: $box-shadow-sm;
+    padding: 3px 5px;
+    white-space: nowrap;
+    position: absolute;
+    display: none;
+    color: $dark;
+    border: 1px solid $gray-200;
+}
+
+.jvm-zoom-btn {
+    border-radius: 3px;
+    background-color: $white;
+    border: 1px solid $gray-200;
+    padding: 6px;
+    box-sizing: border-box;
+    position: absolute;
+    line-height: 8px;
+    cursor: pointer;
+    color: $dark;
+    height: 24px;
+    width: 24px;
+    left: 10px;
+}
+
+.jvm-zoom-btn.jvm-zoomout {
+    top: 38px;
+}
+
+.jvm-zoom-btn.jvm-zoomin {
+    top: 10px;
+}
+
+.jvm-series-container {
+    right: 15px;
+    position: absolute;
+    .jvm-legend {
+        background-color: $white;
+        border: 1px solid $gray-300;
+        margin-left: 0.75rem;
+        border-radius: 0.25rem;
+        border-color: $gray-200;
+        padding: 0.6rem;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        float: left;
+        .jvm-legend-title {
+            line-height: 1;
+            border-bottom: 1px solid $gray-300;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.575rem;
+            text-align: left;
+        }
+        .jvm-legend-inner {
+            overflow: hidden;
+            .jvm-legend-tick {
+                overflow: hidden;
+                min-width: 40px;
+                &:not(:first-child) {
+                    margin-top: 0.575rem;
+                }
+                .jvm-legend-tick-sample {
+                    border-radius: 4px;
+                    margin-right: 0.65rem;
+                    height: 16px;
+                    width: 16px;
+                    float: left;
+                }
+                .jvm-legend-tick-text {
+                    font-size: 12px;
+                    text-align: center;
+                    float: left;
+                }
+            }
+        }
+    }
+}
+
+.jvm-series-container.jvm-series-h {
+    bottom: 15px;
+}
+
+.jvm-series-container.jvm-series-v {
+    top: 15px;
+}
+
+.jvm-line[animation="true"] {
+    animation: jvm-line-animation 10s linear forwards infinite;
+}

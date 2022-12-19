@@ -1,0 +1,361 @@
+import { DateColumnFilter, NoFilter, PostType } from "@components";
+import { NextPage } from "next";
+import { useGlobal } from "@context/global";
+import axios, { AxiosResponse } from "axios";
+import LayoutDefault from "@components/Layouts/default";
+import { useState } from "react";
+import ModalExibirPost from "@components/postType/ModalExibirPost";
+import { Col, Row, Spinner, Table } from "react-bootstrap";
+import { ColumnFn } from "models/ColumnFn";
+import ShowButton from "@components/Utils/Buttons/ShowButton";
+import { AlertError } from "@components/Alerts/Alerts";
+import { getUserLocation } from "@context/user";
+import StatusButton from "@components/Utils/Buttons/StatusButton";
+
+const Page: NextPage = () => {
+  const { token = "" } = useGlobal();
+  const url = `${process.env.API_URL}/core`;
+
+  const [showModalExibir, setShowModalExibir] = useState(false);
+  const [currentPost, setCurrentPost] = useState<any>({});
+  const [loadingModalContent, setLoadingModalContent] =
+    useState<boolean>(false);
+
+  function onCloseModalExibir() {
+    setShowModalExibir(false);
+  }
+
+  function openModalExibir() {
+    setShowModalExibir(true);
+  }
+
+  const colunas =
+    ({ onUpdate, onRemove, getPost, onStatusChange }: ColumnFn) =>
+    () =>
+      [
+        {
+          Header: "Consultor",
+          accessor: "user.name",
+        },
+        {
+          Header: "Data",
+          accessor: "createdAt",
+          Filter: DateColumnFilter,
+          filter: "dateBetween",
+          Cell: ({ value = new Date() }) => (
+            <span>{new Date(value).toLocaleDateString()}</span>
+          ),
+        },
+        {
+          Header: "",
+          accessor: "id",
+          Filter: NoFilter,
+          Cell: ({ value = "" }) => {
+            const currentPost = getPost(value);
+
+            return (
+              <div>
+                <ShowButton
+                  className="me-2"
+                  onClick={async () => {
+                    setLoadingModalContent(true);
+                    setShowModalExibir(true);
+
+                    try {
+                      let new_current_post = await getPost(value);
+
+                      // pega a cidade e o estado do consultor
+                      if (new_current_post.user.stateId) {
+                        const consultant_location = await getUserLocation(
+                          new_current_post.user.stateId,
+                          new_current_post.user.cityId
+                        );
+
+                        new_current_post = {
+                          ...new_current_post,
+                          consultant_location: consultant_location,
+                        };
+                      }
+
+                      if(new_current_post.pdfLink[0]){
+                        new_current_post = {
+                          ...new_current_post,
+                          pdf_url: new_current_post.pdfLink[0].pdfPathName,
+                        };
+                      } else {
+                        new_current_post = {
+                          ...new_current_post,
+                          pdf_url: false,
+                        };
+                      }
+
+
+                      setCurrentPost(new_current_post);
+                    } catch (error) {
+                      setShowModalExibir(false);
+                      AlertError();
+                    }
+
+                    setLoadingModalContent(false);
+                  }}
+                />
+
+                {currentPost && (
+                  <StatusButton
+                    active={currentPost["active"]}
+                    onClick={() => onStatusChange(value, currentPost["active"])}
+                  />
+                )}
+              </div>
+            );
+          },
+        },
+      ];
+
+  const axios_options = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  return (
+    <LayoutDefault>
+      <PostType
+        removeAddButton
+        dataConfig={{
+          url,
+          token,
+          fetcherFn: (fetcherDataFn = () => {}, url = "", options = {}) =>
+            axios
+              .get(`${process.env.API_URL}/core`, options)
+              .then(fetcherDataFn),
+          fetcherDataFn: async (response: AxiosResponse) => {
+            const cores_raw = response.data.cores.data;
+
+            const users_raw = await axios.get(
+              `${process.env.API_URL}/user`,
+              axios_options
+            );
+            const users = users_raw.data.users;
+
+            const cores = cores_raw
+              .map((core: any) => ({
+                ...core,
+                costProductionRequest: JSON.parse(core.costProductionRequest),
+                costProductionResult: JSON.parse(core.costProductionResult),
+                user: users.find((user: any) => user.id === core.userId),
+              }))
+              .filter((core: any) => core.costProductionRequest !== null);
+
+            const cores_sort = cores.sort(
+              // @ts-ignore
+              (a: any, b: any) => new Date(b.createdAt) - new Date(a.createdAt)
+            );
+
+            return cores_sort;
+          },
+        }}
+        formConfig={{
+          insertTitle: "Adicionar Custo de Produção",
+          editTitle: "Editar Custo de Produção",
+        }}
+        tableConfig={{
+          columnsFn: colunas,
+        }}
+        pageConfig={{
+          pageTitle: "Custo de Produção",
+        }}
+      />
+
+      <ModalExibirPost
+        title="Custo de Produção"
+        show={showModalExibir}
+        onClose={onCloseModalExibir}
+        pdf_url={currentPost.pdf_url}
+        size="lg"
+      >
+        <div>
+          {loadingModalContent ? (
+            <div>
+              <Spinner animation={"border"} variant="primary" />
+            </div>
+          ) : (
+            currentPost.user && (
+              <div>
+                <Row>
+                  <Col>
+                    <section>
+                      <h4>Dados do consultor</h4>
+                      <div>Nome: {currentPost.user.name}</div>
+                      <div>Email: {currentPost.user.email}</div>
+                      <div>CPF: {currentPost.user.identification}</div>
+                      <div>Telefone: {currentPost.user.phone}</div>
+                      <div>
+                        Cidade:{" "}
+                        {currentPost.consultant_location
+                          ? currentPost.consultant_location.city
+                          : ""}
+                      </div>
+                      <div>
+                        Estado:{" "}
+                        {currentPost.consultant_location
+                          ? currentPost.consultant_location.state
+                          : ""}
+                      </div>
+                      <div>Revenda: {currentPost.user.formResale}</div>
+                      <div>Região: {currentPost.user.formRegion}</div>
+                    </section>
+                  </Col>
+                </Row>
+
+                <hr />
+                <h4>Custo de produção TMF x Concorrente</h4>
+
+                <Table className="mt-2" bordered>
+                  <tbody>
+                    <tr>
+                      <td className="w-50">
+                        <div className="d-flex justify-content-between">
+                          Preço da Saca (R$):{" "}
+                          <span>
+                            {currentPost.costProductionRequest.bagPrice ?? "-"}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="w-50">
+                        <div className="d-flex justify-content-between">
+                          Área Total (ha):
+                          <span>
+                            {currentPost.costProductionRequest.totalArea ?? "-"}
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td className="text-center">
+                        <b>TMF</b>
+                      </td>
+                      <td className="text-center">
+                        <b>Concorrente</b>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        Dose kg/ha:{" "}
+                        {currentPost.costProductionRequest.fertilizingDosage ??
+                          "-"}
+                      </td>
+                      <td>
+                        Dose kg/ha:{" "}
+                        {currentPost.costProductionRequest
+                          .competingFertilizingDosage ?? "-"}
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        R$/Ton:{" "}
+                        {currentPost.costProductionRequest.fertilizingPrice ??
+                          "-"}
+                      </td>
+                      <td>
+                        R$/Ton:{" "}
+                        {currentPost.costProductionRequest
+                          .competingFertilizingPrice ?? "-"}
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>
+                        Custo Total/ha: R${" "}
+                        {currentPost.costProductionResult.costTotal.toFixed(
+                          2
+                        ) ?? "-"}
+                      </td>
+                      <td>
+                        Custo Total/ha: R${" "}
+                        {currentPost.costProductionResult.competingCostTotal.toFixed(
+                          2
+                        ) ?? "-"}
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td className="text-end">Diferença de custo</td>
+                      <td>
+                        R${" "}
+                        {currentPost.costProductionResult.costDiference.toFixed(
+                          2
+                        ) ?? "-"}
+                      </td>
+                    </tr>
+
+                    <tr className="text-center">
+                      <td>Produtividade TMF (sacas/ha)</td>
+                      <td>Produtividade Concorrente (sacas/ha):</td>
+                    </tr>
+
+                    <tr className="text-center bg-light">
+                      <td>
+                        {currentPost.costProductionRequest.productivity ?? "-"}
+                      </td>
+                      <td>
+                        {currentPost.costProductionRequest
+                          .competingProductivity ?? "-"}
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td className="text-end">Diferença sc/há</td>
+                      <td>
+                        R${" "}
+                        {currentPost.costProductionResult.differenceProductivity.toFixed(
+                          2
+                        ) ?? "-"}
+                      </td>
+                    </tr>
+
+                    <tr className="text-center bg-primary text-light">
+                      <td colSpan={2}>
+                        <strong>
+                          <div className="d-flex justify-content-between">
+                            Lucro por há (R$):{" "}
+                            <span>
+                              {currentPost.costProductionResult.profitTotalArea.toFixed(
+                                2
+                              ) ?? "-"}
+                            </span>
+                          </div>
+                        </strong>
+                      </td>
+                    </tr>
+                    <tr className="text-center bg-primary text-light">
+                      <td colSpan={2}>
+                        <strong>
+                          <div className="d-flex justify-content-between">
+                            Lucro por Área há (R$):{" "}
+                            <span>
+                              {currentPost.costProductionResult.profitPerArea.toFixed(
+                                2
+                              ) ?? "-"}
+                            </span>
+                          </div>
+                        </strong>
+                      </td>
+                    </tr>
+                  </tbody>
+                </Table>
+
+                <hr />
+              </div>
+            )
+          )}
+        </div>
+      </ModalExibirPost>
+    </LayoutDefault>
+  );
+};
+
+export default Page;

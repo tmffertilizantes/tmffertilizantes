@@ -1,0 +1,17 @@
+.SearchBar {
+  .fe-search:before {
+    font-weight: bold;
+  }
+
+  &--secondary {
+    .search-icon {
+      background-color: var(--bs-dark-info);
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+
+      .fe-search:before {
+        color: #FFF;
+      }
+    }
+  }
+}

@@ -1,0 +1,69 @@
+// Tippy scss
+// animation
+
+.tippy-box[data-animation="scale"] {
+  &[data-placement^="top"] {
+    transform-origin: bottom;
+  }
+
+  &[data-placement^="bottom"] {
+    transform-origin: top;
+  }
+
+  &[data-placement^="left"] {
+    transform-origin: right;
+  }
+
+  &[data-placement^="right"] {
+    transform-origin: left;
+  }
+
+  &[data-state="hidden"] {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+}
+
+// light theme
+
+.tippy-box[data-theme~="light"] {
+  color: #26323d;
+  box-shadow: 0 0 20px 4px rgba(154, 161, 177, 0.15), 0 4px 80px -8px rgba(36, 40, 47, 0.25),
+    0 4px 4px -2px rgba(91, 94, 105, 0.15);
+  background-color: $white;
+
+  &[data-placement^="top"] > .tippy-arrow:before {
+    border-top-color: $white;
+  }
+
+  &[data-placement^="bottom"] > .tippy-arrow:before {
+    border-bottom-color: $white;
+  }
+
+  &[data-placement^="left"] > .tippy-arrow:before {
+    border-left-color: $white;
+  }
+
+  &[data-placement^="right"] > .tippy-arrow:before {
+    border-right-color: $white;
+  }
+
+  > {
+    .tippy-backdrop {
+      background-color: $white;
+    }
+
+    .tippy-svg-arrow {
+      fill: $white;
+    }
+  }
+}
+
+.tippy-box[data-theme~="lightPurple"] {
+  background-color: $light-primary;
+  color: $dark-primary;
+}
+
+.tippy-box[data-theme~="lightPurple"][data-placement^="right"] > .tippy-arrow::before {
+  border-right-color: $light-primary;
+}

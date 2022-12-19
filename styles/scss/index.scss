@@ -1,0 +1,15 @@
+// GEEK THEME
+@import "../../geek-theme/scss/theme.scss";
+
+// BASE
+@import "base/base";
+
+// LAYOUTS
+@import "layouts/default";
+
+// COMPONENTS
+@import "components/NavbarVertical";
+@import "components/SearchBar";
+
+// PAGES
+@import "pages/home";
