@@ -17,8 +17,12 @@ export default function SelectLanguage(props: Props) {
       value: "pt-BR",
     },
     {
-      label: "Ingês",
+      label: "Inglês",
       value: "en-US",
+    },
+    {
+      label: "Espanhol",
+      value: "es-ES",
     },
   ];
 
@@ -50,7 +54,9 @@ export default function SelectLanguage(props: Props) {
           onChange={props.onChange}
         >
           {languages.map((language) => (
-            <option key={language.value} value={language.value}>{language.label}</option>
+            <option key={language.value} value={language.value}>
+              {language.label}
+            </option>
           ))}
         </Form.Select>
       )}

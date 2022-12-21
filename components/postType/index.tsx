@@ -23,6 +23,7 @@ import {
 } from "@components/Alerts/Alerts";
 import SelectLanguage from "@components/Utils/SelectLanguage";
 import StatusButton from "@components/Utils/Buttons/StatusButton";
+import { CSVLink } from "react-csv";
 
 interface DefaultColumnsFn {
   onUpdate: Function;
@@ -144,6 +145,18 @@ const defaultColumnsFn =
         Cell: ({ value = "" }) => {
           const currentPost = getPost(value);
 
+          if (!currentPost) {
+            return;
+          }
+
+          if (!currentPost.hasOwnProperty("active")) {
+            currentPost["active"] = false;
+          }
+
+          if (currentPost["active"] == null) {
+            currentPost["active"] = false;
+          }
+
           return (
             <div className="text-end">
               <EditButton className="me-2" onClick={() => onUpdate(value)} />
@@ -171,7 +184,6 @@ const defaultFieldForm = ({
   errorMessage,
   ...props
 }: DefaultFieldForm) => {
-
   return (
     <div className="mb-3">
       <label className="form-label" htmlFor={field}>
@@ -205,6 +217,9 @@ dataConfig: {
 const PostType = ({
   initialPostData = null,
   removeAddButton = false,
+  exportButton = true,
+  csvData = null,
+  csvHeaders = null,
   dataConfig: {
     url = "",
     token = "",
@@ -350,6 +365,8 @@ const PostType = ({
     }
   }
 
+  console.log(posts);
+
   return (
     <>
       <div className="container-fluid p-4">
@@ -360,21 +377,32 @@ const PostType = ({
                 <h1 className="mb-0">{pageTitle}</h1>
               </div>
 
-              {!removeAddButton && (
-                <div>
-                  <a
-                    href="#"
-                    onClick={() => {
-                      setShow(true);
-                    }}
-                    className="btn btn-primary"
-                    data-bs-toggle="modal"
-                    data-bs-target="#newRegion"
+              <div className="d-flex gap-2">
+                {posts && (
+                  <CSVLink
+                    className="btn btn-outline-primary"
+                    data={csvData ?? posts}
+                    headers={csvHeaders ?? false}
                   >
-                    {insertTitle}
-                  </a>
-                </div>
-              )}
+                    Exportar
+                  </CSVLink>
+                )}
+                {!removeAddButton && (
+                  <div>
+                    <a
+                      href="#"
+                      onClick={() => {
+                        setShow(true);
+                      }}
+                      className="btn btn-primary"
+                      data-bs-toggle="modal"
+                      data-bs-target="#newRegion"
+                    >
+                      {insertTitle}
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

@@ -27,6 +27,7 @@ const Page: NextPage = () => {
   const { token = "" } = useGlobal();
   const url = `${process.env.API_URL}/analysis`;
 
+  const [csvData, setCsvData] = useState(null);
   const [showModalExibir, setShowModalExibir] = useState(false);
   const [currentPost, setCurrentPost] = useState<any>({});
   const [loadingModalContent, setLoadingModalContent] =
@@ -224,6 +225,7 @@ const Page: NextPage = () => {
     <LayoutDefault>
       <PostType
         removeAddButton
+        csvData={csvData}
         dataConfig={{
           url,
           token,
@@ -251,6 +253,7 @@ const Page: NextPage = () => {
               } else {
                 tipo_aplicacao = "NUTRIÇÃO DE PLANTAS";
               }
+
               return {
                 ...analise,
                 producer: producers.filter(
@@ -259,6 +262,115 @@ const Page: NextPage = () => {
                 tipo_aplicacao,
               };
             });
+
+            var data_for_csv = analises.map((analise: any) => {
+              let qtd_ca_entregue = "";
+              let qtd_si_entregue = "";
+              let qtd_mg_entregue = "";
+              let qtd_b_entregue = "";
+              let qtd_s_entregue = "";
+              let qtd_n_entregue = "";
+
+              let dosage_description = "";
+              let dosage_value = "";
+
+              if (analise.report.AditionalInformation) {
+                qtd_ca_entregue =
+                  analise.report.AditionalInformation[0].value ?? "";
+                qtd_si_entregue =
+                  analise.report.AditionalInformation[1].value ?? "";
+                qtd_mg_entregue =
+                  analise.report.AditionalInformation[2].value ?? "";
+                qtd_b_entregue =
+                  analise.report.AditionalInformation[3].value ?? "";
+                qtd_s_entregue =
+                  analise.report.AditionalInformation[4].value ?? "";
+                qtd_n_entregue =
+                  analise.report.AditionalInformation[5].value ?? "";
+              }
+
+              if (analise.report.Dosage) {
+                dosage_description = analise.report.Dosage[0].description ?? "";
+                dosage_value = analise.report.Dosage[0].value ?? "";
+              }
+
+              return {
+                id: analise.id,
+                active: analise.active,
+                tipo_analise: analise.tipo_aplicacao,
+                createdAt: analise.createdAt,
+                startDate: analise.startDate,
+                endDate: analise.endDate,
+
+                consultant_name: analise.consultant.user.name ?? "",
+                consultant_email: analise.consultant.user.email ?? "",
+
+                culture_name: analise.culture.name ?? "",
+                culture_lang: analise.culture.lang ?? "",
+
+                producer_name: analise.producer.name ?? "",
+                producer_email: analise.producer.email ?? "",
+                producer_area: analise.producer.area ?? "",
+                producer_technology: analise.producer.technology ?? "",
+
+                product_name: analise.product.name ?? "",
+                product_productionExpectation:
+                  analise.productionExpectation ?? "",
+
+                qtd_ca_entregue: qtd_ca_entregue ?? "",
+                qtd_si_entregue: qtd_si_entregue ?? "",
+                qtd_mg_entregue: qtd_mg_entregue ?? "",
+                qtd_b_entregue: qtd_b_entregue ?? "",
+                qtd_s_entregue: qtd_s_entregue ?? "",
+                qtd_n_entregue: qtd_n_entregue ?? "",
+
+                dosage_description: dosage_description ?? "",
+                dosage_value: dosage_value ?? "",
+
+                calcio_export:
+                  analise.report.NutritionalRequirement?.calcio?.exportacao ??
+                  "",
+                calcio_extract:
+                  analise.report.NutritionalRequirement?.calcio?.extracao ?? "",
+
+                enxofre_export:
+                  analise.report.NutritionalRequirement?.enxofre?.exportacao ??
+                  "",
+                enxofre_extract:
+                  analise.report.NutritionalRequirement?.enxofre?.extracao ??
+                  "",
+
+                fosforo_export:
+                  analise.report.NutritionalRequirement?.fosforo?.exportacao ??
+                  "",
+                fosforo_extract:
+                  analise.report.NutritionalRequirement?.fosforo?.extracao ??
+                  "",
+
+                magnesio_export:
+                  analise.report.NutritionalRequirement?.magnesio?.exportacao ??
+                  "",
+                magnesio_extract:
+                  analise.report.NutritionalRequirement?.magnesio?.extracao ??
+                  "",
+
+                nitrogenio_export:
+                  analise.report.NutritionalRequirement?.nitrogenio
+                    ?.exportacao ?? "",
+                nitrogenio_extract:
+                  analise.report.NutritionalRequirement?.nitrogenio?.extracao ??
+                  "",
+
+                potassio_export:
+                  analise.report.NutritionalRequirement?.potassio?.exportacao ??
+                  "",
+                potassio_extract:
+                  analise.report.NutritionalRequirement?.potassio?.extracao ??
+                  "",
+              };
+            });
+
+            setCsvData(data_for_csv);
 
             console.log(analises);
 
