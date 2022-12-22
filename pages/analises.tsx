@@ -274,24 +274,240 @@ const Page: NextPage = () => {
               let dosage_description = "";
               let dosage_value = "";
 
-              if (analise.report.AditionalInformation) {
-                qtd_ca_entregue =
-                  analise.report.AditionalInformation[0].value ?? "";
-                qtd_si_entregue =
-                  analise.report.AditionalInformation[1].value ?? "";
-                qtd_mg_entregue =
-                  analise.report.AditionalInformation[2].value ?? "";
-                qtd_b_entregue =
-                  analise.report.AditionalInformation[3].value ?? "";
-                qtd_s_entregue =
-                  analise.report.AditionalInformation[4].value ?? "";
-                qtd_n_entregue =
-                  analise.report.AditionalInformation[5].value ?? "";
+              let dose_recomendada = "";
+              let kcl = "";
+
+              // calculo real
+              let teor_argila = "";
+              let kcl_recomendado = "";
+              let porcentagem_planta = "";
+
+              let mg_desejado = "";
+              let ca_desejado = "";
+              let k_desejado = "";
+
+              let calc_real_qtd_ca = "";
+              let calc_real_qtd_mg = "";
+
+              let valor_calculo = "";
+              // fim calculo real
+
+              // exprot - extract
+              let calcio_export = "";
+              let calcio_extract = "";
+
+              let enxofre_export = "";
+              let enxofre_extract = "";
+
+              let fosforo_export = "";
+              let fosforo_extract = "";
+
+              let magnesio_export = "";
+              let magnesio_extract = "";
+
+              let nitrogenio_export = "";
+              let nitrogenio_extract = "";
+
+              let potassio_export = "";
+              let potassio_extract = "";
+              // fim export - extract
+
+              // CTC
+              let ca_ctc_solo = "";
+              let ca_ctc_desejado = "";
+
+              let mg_ctc_solo = "";
+              let mg_ctc_desejado = "";
+
+              let k_ctc_solo = "";
+              let k_ctc_desejado = "";
+
+              let relacao_ctc_solo = "";
+              let relacao_ctc_desejado = "";
+              // fim CTC
+
+              // MINERAIS
+              let mineral_ca = "";
+              let mineral_si = "";
+              let mineral_mg = "";
+              let mineral_b = "";
+              let mineral_s = "";
+              let mineral_n = "";
+              // FIM MINERAIS
+
+              if (analise.tipo_aplicacao.includes("PLANTAS")) {
+                if (analise.report.AditionalInformation) {
+                  qtd_ca_entregue =
+                    analise.report.AditionalInformation[0].value ?? "";
+                  qtd_si_entregue =
+                    analise.report.AditionalInformation[1].value ?? "";
+                  qtd_mg_entregue =
+                    analise.report.AditionalInformation[2].value ?? "";
+                  qtd_b_entregue =
+                    analise.report.AditionalInformation[3].value ?? "";
+                  qtd_s_entregue =
+                    analise.report.AditionalInformation[4].value ?? "";
+                  qtd_n_entregue =
+                    analise.report.AditionalInformation[5].value ?? "";
+                }
+
+                if (analise.report.Dosage) {
+                  dosage_description =
+                    analise.report.Dosage[0].description ?? "";
+                  dosage_value = analise.report.Dosage[0].value ?? "";
+                }
+
+                calcio_export =
+                  analise.report.NutritionalRequirement?.calcio?.exportacao ??
+                  "";
+                calcio_extract =
+                  analise.report.NutritionalRequirement?.calcio?.extracao ?? "";
+
+                enxofre_export =
+                  analise.report.NutritionalRequirement?.enxofre?.exportacao ??
+                  "";
+                enxofre_extract =
+                  analise.report.NutritionalRequirement?.enxofre?.extracao ??
+                  "";
+
+                fosforo_export =
+                  analise.report.NutritionalRequirement?.fosforo?.exportacao ??
+                  "";
+                fosforo_extract =
+                  analise.report.NutritionalRequirement?.fosforo?.extracao ??
+                  "";
+
+                magnesio_export =
+                  analise.report.NutritionalRequirement?.magnesio?.exportacao ??
+                  "";
+                magnesio_extract =
+                  analise.report.NutritionalRequirement?.magnesio?.extracao ??
+                  "";
+
+                nitrogenio_export =
+                  analise.report.NutritionalRequirement?.nitrogenio
+                    ?.exportacao ?? "";
+                nitrogenio_extract =
+                  analise.report.NutritionalRequirement?.nitrogenio?.extracao ??
+                  "";
+
+                potassio_export =
+                  analise.report.NutritionalRequirement?.potassio?.exportacao ??
+                  "";
+                potassio_extract =
+                  analise.report.NutritionalRequirement?.potassio?.extracao ??
+                  "";
               }
 
-              if (analise.report.Dosage) {
-                dosage_description = analise.report.Dosage[0].description ?? "";
-                dosage_value = analise.report.Dosage[0].value ?? "";
+              if (analise.tipo_aplicacao.includes("SOLO")) {
+                if (analise.report.resultPlant?.NutritionalRequirement) {
+                  calcio_export =
+                    analise.report.resultPlant?.NutritionalRequirement.calcio
+                      ?.exportacao ?? "";
+                  calcio_extract =
+                    analise.report.resultPlant?.NutritionalRequirement.calcio
+                      ?.extracao ?? "";
+
+                  enxofre_export =
+                    analise.report.resultPlant?.NutritionalRequirement.enxofre
+                      ?.exportacao ?? "";
+                  enxofre_extract =
+                    analise.report.resultPlant?.NutritionalRequirement.enxofre
+                      ?.extracao ?? "";
+
+                  fosforo_export =
+                    analise.report.resultPlant?.NutritionalRequirement.fosforo
+                      ?.exportacao ?? "";
+                  fosforo_extract =
+                    analise.report.resultPlant?.NutritionalRequirement.fosforo
+                      ?.extracao ?? "";
+
+                  magnesio_export =
+                    analise.report.resultPlant?.NutritionalRequirement.magnesio
+                      ?.exportacao ?? "";
+                  magnesio_extract =
+                    analise.report.resultPlant?.NutritionalRequirement.magnesio
+                      ?.extracao ?? "";
+
+                  nitrogenio_export =
+                    analise.report.resultPlant?.NutritionalRequirement
+                      .nitrogenio?.exportacao ?? "";
+                  nitrogenio_extract =
+                    analise.report.resultPlant?.NutritionalRequirement
+                      .nitrogenio?.extracao ?? "";
+
+                  potassio_export =
+                    analise.report.resultPlant?.NutritionalRequirement.potassio
+                      ?.exportacao ?? "";
+                  potassio_extract =
+                    analise.report.resultPlant?.NutritionalRequirement.potassio
+                      ?.extracao ?? "";
+                }
+
+                if (analise.report.resultSoil) {
+                  qtd_ca_entregue =
+                    analise.report.resultSoil.productRecommended?.QtdCa;
+                  qtd_mg_entregue =
+                    analise.report.resultSoil.productRecommended?.QtdMg;
+
+                  dose_recomendada =
+                    analise.report.resultSoil.productRecommended?.dosage;
+                  kcl =
+                    analise.report.resultSoil.productRecommended
+                      ?.recommendedKCL;
+
+                  mineral_ca =
+                    analise.report.resultSoil.productRecommended?.minerals?.ca;
+                  mineral_si =
+                    analise.report.resultSoil.productRecommended?.minerals?.si;
+                  mineral_mg =
+                    analise.report.resultSoil.productRecommended?.minerals?.mg;
+                  mineral_b =
+                    analise.report.resultSoil.productRecommended?.minerals?.b;
+                  mineral_n =
+                    analise.report.resultSoil.productRecommended?.minerals?.n;
+                  mineral_s =
+                    analise.report.resultSoil.productRecommended?.minerals?.s;
+
+                  if (analise.report.resultSoil.expectativeResult) {
+                    ca_ctc_desejado =
+                      analise.report.resultSoil.expectativeResult.Ca;
+                    mg_ctc_desejado =
+                      analise.report.resultSoil.expectativeResult.K;
+                    k_ctc_desejado =
+                      analise.report.resultSoil.expectativeResult.Mg;
+                  }
+
+                  if (analise.report.resultSoil.measureResult) {
+                    ca_ctc_solo = analise.report.resultSoil.measureResult.Ca;
+                    mg_ctc_solo = analise.report.resultSoil.measureResult.K;
+                    k_ctc_solo = analise.report.resultSoil.measureResult.Mg;
+                  }
+
+                  relacao_ctc_solo =
+                    analise.report.resultSoil.relationCaMgMeasure;
+                  relacao_ctc_desejado =
+                    analise.report.resultSoil.relationCaMgExpectative;
+                }
+
+                if (analise.report.realResult) {
+                  dosage_value = analise.report.realResult.realDosage;
+
+                  teor_argila =
+                    analise.report.realResult.realMeasureResult?.teorArgila;
+                  ca_desejado = analise.report.realResult.realMeasureResult?.Ca;
+                  k_desejado = analise.report.realResult.realMeasureResult?.K;
+                  mg_desejado = analise.report.realResult.realMeasureResult?.Mg;
+                  valor_calculo =
+                    analise.report.realResult.realMeasureResult?.V;
+
+                  kcl_recomendado = analise.report.realResult.recommendedKCL;
+                  porcentagem_planta =
+                    analise.report.realResult.percentageFromPlant;
+
+                  calc_real_qtd_ca = analise.report.realResult.qtdCa;
+                  calc_real_qtd_mg = analise.report.realResult.qtdMg;
+                }
               }
 
               return {
@@ -327,52 +543,62 @@ const Page: NextPage = () => {
                 dosage_description: dosage_description ?? "",
                 dosage_value: dosage_value ?? "",
 
-                calcio_export:
-                  analise.report.NutritionalRequirement?.calcio?.exportacao ??
-                  "",
-                calcio_extract:
-                  analise.report.NutritionalRequirement?.calcio?.extracao ?? "",
+                calcio_export: calcio_export ?? "",
+                calcio_extract: calcio_extract ?? "",
 
-                enxofre_export:
-                  analise.report.NutritionalRequirement?.enxofre?.exportacao ??
-                  "",
-                enxofre_extract:
-                  analise.report.NutritionalRequirement?.enxofre?.extracao ??
-                  "",
+                enxofre_export: enxofre_export ?? "",
+                enxofre_extract: enxofre_extract ?? "",
 
-                fosforo_export:
-                  analise.report.NutritionalRequirement?.fosforo?.exportacao ??
-                  "",
-                fosforo_extract:
-                  analise.report.NutritionalRequirement?.fosforo?.extracao ??
-                  "",
+                fosforo_export: fosforo_export ?? "",
+                fosforo_extract: fosforo_extract ?? "",
 
-                magnesio_export:
-                  analise.report.NutritionalRequirement?.magnesio?.exportacao ??
-                  "",
-                magnesio_extract:
-                  analise.report.NutritionalRequirement?.magnesio?.extracao ??
-                  "",
+                magnesio_export: magnesio_export ?? "",
+                magnesio_extract: magnesio_extract ?? "",
 
-                nitrogenio_export:
-                  analise.report.NutritionalRequirement?.nitrogenio
-                    ?.exportacao ?? "",
-                nitrogenio_extract:
-                  analise.report.NutritionalRequirement?.nitrogenio?.extracao ??
-                  "",
+                nitrogenio_export: nitrogenio_export ?? "",
+                nitrogenio_extract: nitrogenio_extract ?? "",
 
-                potassio_export:
-                  analise.report.NutritionalRequirement?.potassio?.exportacao ??
-                  "",
-                potassio_extract:
-                  analise.report.NutritionalRequirement?.potassio?.extracao ??
-                  "",
+                potassio_export: potassio_export ?? "",
+                potassio_extract: potassio_extract ?? "",
+
+                ca_ctc_solo: ca_ctc_solo ?? "",
+                ca_ctc_desejado: ca_ctc_desejado ?? "",
+
+                mg_ctc_solo: mg_ctc_solo ?? "",
+                mg_ctc_desejado: mg_ctc_desejado ?? "",
+
+                k_ctc_solo: k_ctc_solo ?? "",
+                k_ctc_desejado: k_ctc_desejado ?? "",
+
+                relacao_ctc_solo: relacao_ctc_solo ?? "",
+                relacao_ctc_desejado: relacao_ctc_desejado ?? "",
+
+                dose_recomendada: dose_recomendada ?? "",
+                kcl: kcl ?? "",
+
+                mineral_ca: mineral_ca ?? "",
+                mineral_si: mineral_si ?? "",
+                mineral_mg: mineral_mg ?? "",
+                mineral_b: mineral_b ?? "",
+                mineral_n: mineral_n ?? "",
+                mineral_s: mineral_s ?? "",
+
+                teor_argila: teor_argila ?? "",
+                ca_desejado: ca_desejado ?? "",
+                k_desejado: k_desejado ?? "",
+                mg_desejado: mg_desejado ?? "",
+
+                kcl_recomendado: kcl_recomendado ?? "",
+                porcentagem_planta: porcentagem_planta ?? "",
+
+                calc_real_qtd_ca: calc_real_qtd_ca ?? "",
+                calc_real_qtd_mg: calc_real_qtd_mg ?? "",
+
+                valor_calculo: valor_calculo ?? "",
               };
             });
 
             setCsvData(data_for_csv);
-
-            console.log(analises);
 
             return analises;
           },

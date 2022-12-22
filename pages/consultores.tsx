@@ -79,6 +79,7 @@ export default function Consultores() {
   const url = `${process.env.API_URL}/consultant`;
 
   const [estado, setEstado] = useState<number | null>(null);
+  const [csvData, setCsvData] = useState(null);
 
   const fields = [
     {
@@ -94,19 +95,22 @@ export default function Consultores() {
               onChange={(event) => {
                 var user_status = "";
 
-                if(!post.resaleId && !post.regionId) {
-                  AlertError("Por favor, selecione uma Revenda e uma Região", 2000);
-                  return
+                if (!post.resaleId && !post.regionId) {
+                  AlertError(
+                    "Por favor, selecione uma Revenda e uma Região",
+                    2000
+                  );
+                  return;
                 }
 
-                if(!post.resaleId) {
+                if (!post.resaleId) {
                   AlertError("Por favor, selecione uma Revenda", 2000);
-                  return
+                  return;
                 }
 
-                if(!post.regionId) {
+                if (!post.regionId) {
                   AlertError("Por favor, selecione uma Região", 2000);
-                  return
+                  return;
                 }
 
                 if (event.target.checked) {
@@ -543,6 +547,7 @@ export default function Consultores() {
     <LayoutDefault>
       <PostType
         removeAddButton
+        csvData={csvData}
         dataConfig={{
           url,
           token,
@@ -552,7 +557,29 @@ export default function Consultores() {
             options = {}
           ) => axios.get(url, options).then(fetcherDataFn),
           fetcherDataFn: (response: AxiosResponse) => {
-            return response.data.consultants;
+            const consultant = response.data.consultants;
+
+            var data_for_csv = consultant.map((consultant: any) => {
+              return {
+                id: consultant.id,
+                active: consultant.active,
+                name: consultant.user?.name ?? "",
+                email: consultant.user?.email ?? "",
+                identification: consultant.user?.identification ?? "",
+                phone: consultant.user?.phone ?? "",
+                status: consultant.user?.status ?? "",
+
+                formRegion: consultant.formRegion,
+                formResale: consultant.formResale,
+
+                region: consultant.region?.name ?? "",
+                resale: consultant.resale?.name ?? "",
+              };
+            });
+
+            setCsvData(data_for_csv);
+
+            return consultant;
           },
           updateUrlFn: (url = "", id = "") =>
             `${process.env.API_URL}/user/${id}`,

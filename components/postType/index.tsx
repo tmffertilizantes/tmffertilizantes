@@ -365,8 +365,6 @@ const PostType = ({
     }
   }
 
-  console.log(posts);
-
   return (
     <>
       <div className="container-fluid p-4">
@@ -378,7 +376,7 @@ const PostType = ({
               </div>
 
               <div className="d-flex gap-2">
-                {posts && (
+                {posts && exportButton && (
                   <CSVLink
                     className="btn btn-outline-primary"
                     data={csvData ?? posts}

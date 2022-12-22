@@ -16,6 +16,8 @@ const Page: NextPage = () => {
   const { token = "" } = useGlobal();
   const url = `${process.env.API_URL}/core`;
 
+  const [csvData, setCsvData] = useState(null);
+
   const [showModalExibir, setShowModalExibir] = useState(false);
   const [currentPost, setCurrentPost] = useState<any>({});
   const [loadingModalContent, setLoadingModalContent] =
@@ -77,18 +79,6 @@ const Page: NextPage = () => {
                         };
                       }
 
-                      if(new_current_post.pdfLink[0]){
-                        new_current_post = {
-                          ...new_current_post,
-                          pdf_url: new_current_post.pdfLink[0].pdfPathName,
-                        };
-                      } else {
-                        new_current_post = {
-                          ...new_current_post,
-                          pdf_url: false,
-                        };
-                      }
-
                       setCurrentPost(new_current_post);
                     } catch (error) {
                       setShowModalExibir(false);
@@ -121,6 +111,7 @@ const Page: NextPage = () => {
     <LayoutDefault>
       <PostType
         removeAddButton
+        csvData={csvData}
         dataConfig={{
           url,
           token,
@@ -138,18 +129,129 @@ const Page: NextPage = () => {
             const users = users_raw.data.users;
 
             const cores = cores_raw
-              .map((core: any) => ({
-                ...core,
-                costCompetingRequest: JSON.parse(core.costCompetingRequest),
-                costCompetingResult: JSON.parse(core.costCompetingResult),
-                user: users.find((user: any) => user.id === core.userId),
-              }))
+              .map((core: any) => {
+                if (core.pdfLink[0]) {
+                  core = {
+                    ...core,
+                    pdf_url: core.pdfLink[0].pdfPathName,
+                  };
+                } else {
+                  core = {
+                    ...core,
+                    pdf_url: false,
+                  };
+                }
+
+                return {
+                  ...core,
+                  costCompetingRequest: JSON.parse(core.costCompetingRequest),
+                  costCompetingResult: JSON.parse(core.costCompetingResult),
+                  user: users.find((user: any) => user.id === core.userId),
+                };
+              })
               .filter((core: any) => core.costCompetingRequest !== null);
 
             const cores_sort = cores.sort(
               // @ts-ignore
               (a: any, b: any) => new Date(b.createdAt) - new Date(a.createdAt)
             );
+
+            var data_for_csv = cores_sort.map((core: any) => {
+              return {
+                id: core.id,
+                consultant_name: core.user.name,
+                consultant_email: core.user.email,
+
+                tmf_recomendacao:
+                  core.costCompetingRequest.limestoneRecomendation,
+
+                tmf_insumo: core.costCompetingRequest.costInput.limestoneTon,
+                tmf_frete: core.costCompetingRequest.costInput.shippingTon,
+                tmf_custo_insumo: core.costCompetingResult.costInputTotal,
+
+                tmf_homem_hora:
+                  core.costCompetingRequest.costApplication.manHour,
+                tmf_horas_trabalhadas:
+                  core.costCompetingRequest.costApplication
+                    .workedHoursTractorApplicator,
+
+                tmf_trator_concha:
+                  core.costCompetingRequest.costApplication.dieselTractorShell,
+                tmf_horas_trabalhadas_concha:
+                  core.costCompetingRequest.costApplication
+                    .workedHoursTractorShell,
+
+                tmf_trator_aplicador:
+                  core.costCompetingRequest.costApplication
+                    .dieselTractorApplicator,
+                tmf_horas_trabalhadas_aplicador:
+                  core.costCompetingRequest.costApplication
+                    .workedHoursTractorApplicator,
+
+                tmf_custo_aplicacao:
+                  core.costCompetingResult.costApplicationTotal,
+                tmf_custo_total: core.costCompetingResult.finalResultTMF,
+
+                calcario_recomendacao:
+                  core.costCompetingRequest.competingLimestoneRecomendation,
+
+                calcario_insumo:
+                  core.costCompetingRequest.competingCostInput.limestoneTon,
+                calcario_frete:
+                  core.costCompetingRequest.competingCostInput.shippingTon,
+                calcario_perda_vento:
+                  core.costCompetingRequest.competingCostInput
+                    .windMoistureLossPercentage,
+                calcario_prnt:
+                  core.costCompetingRequest.competingCostInput
+                    .limestoneEfficiencyPrntPercentage,
+                calcario_insumo_custo:
+                  core.costCompetingResult.competingCostInputTotal,
+
+                calcario_homem_hora:
+                  core.costCompetingRequest.competingCostApplication.manHour,
+                calcario_horas_trabalhadas:
+                  core.costCompetingRequest.competingCostApplication
+                    .workedHoursTractorApplicator,
+
+                calcario_trator_concha:
+                  core.costCompetingRequest.competingCostApplication
+                    .dieselTractorShell,
+                calcario_horas_trabalhadas_concha:
+                  core.costCompetingRequest.competingCostApplication
+                    .workedHoursTractorShell,
+
+                calcario_trator_aplicador:
+                  core.costCompetingRequest.competingCostApplication
+                    .dieselTractorApplicator,
+                calcario_horas_trabalhadas_aplicador:
+                  core.costCompetingRequest.competingCostApplication
+                    .workedHoursTractorApplicator,
+
+                calcario_aplicacao_custo:
+                  core.costCompetingResult.competingCostApplicationTotal,
+
+                calcario_incorporacao_homem_hora:
+                  core.costCompetingRequest.competingCostIncorporation.manHour,
+                calcario_incorporacao_horas:
+                  core.costCompetingRequest.competingCostIncorporation
+                    .hoursToApplication,
+                calcario_incorporacao_trator:
+                  core.costCompetingRequest.competingCostIncorporation
+                    .dieselTractorGrid,
+                calcario_incorporacao_trator_hora:
+                  core.costCompetingRequest.competingCostIncorporation
+                    .workedHoursTractorGrid,
+
+                calcario_incorporacao_custo:
+                  core.costCompetingResult.competingCostIncorporationTotal,
+
+                calcario_custo_total:
+                  core.costCompetingResult.finalResultCompeting,
+              };
+            });
+
+            setCsvData(data_for_csv);
 
             return cores_sort;
           },

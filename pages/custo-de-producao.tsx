@@ -16,6 +16,8 @@ const Page: NextPage = () => {
   const { token = "" } = useGlobal();
   const url = `${process.env.API_URL}/core`;
 
+  const [csvData, setCsvData] = useState(null);
+
   const [showModalExibir, setShowModalExibir] = useState(false);
   const [currentPost, setCurrentPost] = useState<any>({});
   const [loadingModalContent, setLoadingModalContent] =
@@ -77,19 +79,6 @@ const Page: NextPage = () => {
                         };
                       }
 
-                      if(new_current_post.pdfLink[0]){
-                        new_current_post = {
-                          ...new_current_post,
-                          pdf_url: new_current_post.pdfLink[0].pdfPathName,
-                        };
-                      } else {
-                        new_current_post = {
-                          ...new_current_post,
-                          pdf_url: false,
-                        };
-                      }
-
-
                       setCurrentPost(new_current_post);
                     } catch (error) {
                       setShowModalExibir(false);
@@ -122,6 +111,7 @@ const Page: NextPage = () => {
     <LayoutDefault>
       <PostType
         removeAddButton
+        csvData={csvData}
         dataConfig={{
           url,
           token,
@@ -139,18 +129,66 @@ const Page: NextPage = () => {
             const users = users_raw.data.users;
 
             const cores = cores_raw
-              .map((core: any) => ({
-                ...core,
-                costProductionRequest: JSON.parse(core.costProductionRequest),
-                costProductionResult: JSON.parse(core.costProductionResult),
-                user: users.find((user: any) => user.id === core.userId),
-              }))
+              .map((core: any) => {
+                if (core.pdfLink[0]) {
+                  core = {
+                    ...core,
+                    pdf_url: core.pdfLink[0].pdfPathName,
+                  };
+                } else {
+                  core = {
+                    ...core,
+                    pdf_url: false,
+                  };
+                }
+
+                return {
+                  ...core,
+                  costProductionRequest: JSON.parse(core.costProductionRequest),
+                  costProductionResult: JSON.parse(core.costProductionResult),
+                  user: users.find((user: any) => user.id === core.userId),
+                };
+              })
               .filter((core: any) => core.costProductionRequest !== null);
 
             const cores_sort = cores.sort(
               // @ts-ignore
               (a: any, b: any) => new Date(b.createdAt) - new Date(a.createdAt)
             );
+
+            var data_for_csv = cores_sort.map((core: any) => {
+              return {
+                id: core.id,
+                consultant_name: core.user.name,
+                consultant_email: core.user.email,
+
+                saca: core.costProductionRequest.bagPrice,
+                area_total: core.costProductionRequest.totalArea,
+
+                tmf_dose: core.costProductionRequest.fertilizingDosage,
+                tmf_price_per_ton: core.costProductionRequest.fertilizingPrice,
+                tmf_cost_per_ha: core.costProductionResult.costTotal,
+                tmf_productivity: core.costProductionRequest.productivity,
+
+                concorrente_dose:
+                  core.costProductionRequest.competingFertilizingDosage,
+                concorrente_price_per_ton:
+                  core.costProductionRequest.competingFertilizingPrice,
+                concorrente_cost_per_ha:
+                  core.costProductionResult.competingCostTotal,
+                concorrente_productivity:
+                  core.costProductionRequest.competingProductivity,
+
+                diferenca_custo: core.costProductionResult.costDiference,
+                diferenca_produtividade:
+                  core.costProductionResult.differenceProductivity,
+
+                lucro_por_ha: core.costProductionResult.profitPerArea,
+                lucro_por_area: core.costProductionResult.profitTotalArea,
+              };
+            });
+
+            setCsvData(data_for_csv);
 
             return cores_sort;
           },

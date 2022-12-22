@@ -32,6 +32,8 @@ export default function Produtos() {
 
   const [language, setLanguage] = useState("pt-br");
 
+  const [csvData, setCsvData] = useState(null);
+
   interface MineralName {
     name: "ca" | "si";
   }
@@ -340,6 +342,7 @@ export default function Produtos() {
     <LayoutDefault>
       <PostType
         initialPostData={initialData}
+        csvData={csvData}
         dataConfig={{
           url,
           token,
@@ -365,7 +368,27 @@ export default function Produtos() {
                 options
               )
               .then(fetcherDataFn),
-          fetcherDataFn: (response: AxiosResponse) => response.data.products,
+          fetcherDataFn: (response: AxiosResponse) => {
+            const products = response.data.products;
+
+            var data_for_csv = products.map((product: any) => {
+              return {
+                ...product,
+                minerals: "-",
+                category: product.category?.name ?? "",
+                calcio: getPostMineral(product, "ca"),
+                silicio: getPostMineral(product, "si"),
+                magnesio: getPostMineral(product, "mg"),
+                boro: getPostMineral(product, "b"),
+                enxofre: getPostMineral(product, "s"),
+                nitrogenio: getPostMineral(product, "n"),
+              };
+            });
+
+            setCsvData(data_for_csv);
+
+            return products;
+          },
         }}
         formConfig={{
           insertTitle: "Adicionar Produto",
