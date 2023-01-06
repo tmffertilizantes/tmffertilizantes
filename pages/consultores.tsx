@@ -95,24 +95,6 @@ export default function Consultores() {
               onChange={(event) => {
                 var user_status = "";
 
-                if (!post.resaleId && !post.regionId) {
-                  AlertError(
-                    "Por favor, selecione uma Revenda e uma Região",
-                    2000
-                  );
-                  return;
-                }
-
-                if (!post.resaleId) {
-                  AlertError("Por favor, selecione uma Revenda", 2000);
-                  return;
-                }
-
-                if (!post.regionId) {
-                  AlertError("Por favor, selecione uma Região", 2000);
-                  return;
-                }
-
                 if (event.target.checked) {
                   user_status = "approved";
                 } else {
