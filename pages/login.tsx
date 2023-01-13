@@ -17,7 +17,7 @@ export default function Login() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("Login incorreto");
   const [disableSubmitButton, setDisableSubmitButton] = useState<boolean>(true);
 
   const [login, setLogin] = useState<UserLogin>({
@@ -88,9 +88,11 @@ export default function Login() {
 
         router.push("/analises");
       } else {
+        setErrorMessage("Acesso negado");
         setShowErrorMessage(true);
       }
     } catch (error) {
+      setErrorMessage("Login incorreto");
       setShowErrorMessage(true);
       console.error(error);
     }
@@ -150,7 +152,7 @@ export default function Login() {
 
                 {showErrorMessage && (
                   <div className="mb-3 text-center">
-                    <span className="text-danger">Login incorreto</span>
+                    <span className="text-danger">{errorMessage}</span>
                   </div>
                 )}
 
