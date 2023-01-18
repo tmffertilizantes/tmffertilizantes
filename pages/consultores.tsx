@@ -14,6 +14,7 @@ import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import Select from "react-select";
 import useSWR from "swr";
+import { Modal } from "react-bootstrap";
 
 interface CustomComponent {
   post: any;
@@ -81,7 +82,112 @@ export default function Consultores() {
   const [estado, setEstado] = useState<number | null>(null);
   const [csvData, setCsvData] = useState(null);
 
+  const [showModalConfirm, setShowModalConfirm] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [savingNewPassword, setSavingNewPassword] = useState(false);
+
+  async function generateNewPassword(email: string) {
+    setSavingNewPassword(true);
+
+    var chars =
+      "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    var passwordLength = 8;
+    var password = "";
+
+    for (var i = 0; i <= passwordLength; i++) {
+      var randomNumber = Math.floor(Math.random() * chars.length);
+      password += chars.substring(randomNumber, randomNumber + 1);
+    }
+
+    setNewPassword(password);
+
+    try {
+      const response = await axios.post(
+        `${process.env.API_URL}/auth/reset-password`,
+        {
+          email: email,
+          newPassword: password,
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
+
+    setSavingNewPassword(false);
+    setShowNewPassword(true);
+  }
+
   const fields = [
+    {
+      Component: ({ post, setPost }: CustomComponent) => (
+        <div className="mb-3">
+          <div className="text-end">
+            <button
+              className="btn btn-outline-white btn-sm"
+              onClick={() => setShowModalConfirm(true)}
+            >
+              Gerar nova senha
+            </button>
+          </div>
+
+          <Modal
+            show={showModalConfirm}
+            onHide={() => {
+              setShowModalConfirm(false);
+              setShowNewPassword(false);
+            }}
+            style={{ backgroundColor: "rgba(0,0,0,0.3)" }}
+            animation={false}
+            centered
+            size="sm"
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Confirmar Nova Senha</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body className="text-center">
+              {showNewPassword ? (
+                <>
+                  {savingNewPassword ? (
+                    <>Gerando nova senha...</>
+                  ) : (
+                    <>
+                      Sua nova senha é: <br></br>
+                      {newPassword}
+                    </>
+                  )}
+                </>
+              ) : (
+                <>
+                  Deseja gerar uma nova senha?
+                  <div className="d-flex gap-3 mt-4 justify-content-center">
+                    <button
+                      className="btn btn-outline-primary btn-sm"
+                      onClick={() => {
+                        if (savingNewPassword) {
+                          return;
+                        }
+                        generateNewPassword(post.user.email);
+                      }}
+                    >
+                      Sim
+                    </button>
+
+                    <button
+                      className="btn btn-outline-danger btn-sm"
+                      onClick={() => setShowModalConfirm(false)}
+                    >
+                      Não
+                    </button>
+                  </div>
+                </>
+              )}
+            </Modal.Body>
+          </Modal>
+        </div>
+      ),
+    },
     {
       Component: ({ post, setPost }: CustomComponent) => (
         <div className="mb-3">
