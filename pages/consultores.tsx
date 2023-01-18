@@ -103,7 +103,7 @@ export default function Consultores() {
     setNewPassword(password);
 
     try {
-      const response = await axios.post(
+      const response = await axios.patch(
         `${process.env.API_URL}/auth/reset-password`,
         {
           email: email,
