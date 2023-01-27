@@ -153,6 +153,12 @@ export default function Produtos() {
       ),
     },
     {
+      field: "parameter",
+      label: "Parâmetro",
+      placeholder: "230",
+      type: "number",
+    },
+    {
       Component: ({ post, setPost }: CustomComponent) => (
         <div>
           <div className="mb-3">
