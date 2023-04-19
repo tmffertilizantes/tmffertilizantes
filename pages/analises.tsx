@@ -402,43 +402,49 @@ const Page: NextPage = () => {
               if (analise.tipo_aplicacao.includes("SOLO")) {
                 if (analise.report.resultPlant?.NutritionalRequirement) {
                   calcio_export =
-                    analise.report.resultPlant?.NutritionalRequirement.calcio
-                      ?.exportacao ?? "";
+                    analise.report.resultPlant?.NutritionalRequirement.calcio?.exportacao.toFixed(
+                      2
+                    ) ?? "";
                   calcio_extract =
                     analise.report.resultPlant?.NutritionalRequirement.calcio
                       ?.extracao ?? "";
 
                   enxofre_export =
-                    analise.report.resultPlant?.NutritionalRequirement.enxofre
-                      ?.exportacao ?? "";
+                    analise.report.resultPlant?.NutritionalRequirement.enxofre?.exportacao.toFixed(
+                      2
+                    ) ?? "";
                   enxofre_extract =
                     analise.report.resultPlant?.NutritionalRequirement.enxofre
                       ?.extracao ?? "";
 
                   fosforo_export =
-                    analise.report.resultPlant?.NutritionalRequirement.fosforo
-                      ?.exportacao ?? "";
+                    analise.report.resultPlant?.NutritionalRequirement.fosforo?.exportacao.toFixed(
+                      2
+                    ) ?? "";
                   fosforo_extract =
                     analise.report.resultPlant?.NutritionalRequirement.fosforo
                       ?.extracao ?? "";
 
                   magnesio_export =
-                    analise.report.resultPlant?.NutritionalRequirement.magnesio
-                      ?.exportacao ?? "";
+                    analise.report.resultPlant?.NutritionalRequirement.magnesio?.exportacao.toFixed(
+                      2
+                    ) ?? "";
                   magnesio_extract =
                     analise.report.resultPlant?.NutritionalRequirement.magnesio
                       ?.extracao ?? "";
 
                   nitrogenio_export =
-                    analise.report.resultPlant?.NutritionalRequirement
-                      .nitrogenio?.exportacao ?? "";
+                    analise.report.resultPlant?.NutritionalRequirement.nitrogenio?.exportacao.toFixed(
+                      2
+                    ) ?? "";
                   nitrogenio_extract =
                     analise.report.resultPlant?.NutritionalRequirement
                       .nitrogenio?.extracao ?? "";
 
                   potassio_export =
-                    analise.report.resultPlant?.NutritionalRequirement.potassio
-                      ?.exportacao ?? "";
+                    analise.report.resultPlant?.NutritionalRequirement.potassio?.exportacao.toFixed(
+                      2
+                    ) ?? "";
                   potassio_extract =
                     analise.report.resultPlant?.NutritionalRequirement.potassio
                       ?.extracao ?? "";
@@ -446,15 +452,20 @@ const Page: NextPage = () => {
 
                 if (analise.report.resultSoil) {
                   qtd_ca_entregue =
-                    analise.report.resultSoil.productRecommended?.QtdCa;
+                    analise.report.resultSoil.productRecommended?.QtdCa.toFixed(
+                      2
+                    );
                   qtd_mg_entregue =
                     analise.report.resultSoil.productRecommended?.QtdMg;
 
                   dose_recomendada =
-                    analise.report.resultSoil.productRecommended?.dosage;
+                    analise.report.resultSoil.productRecommended?.dosage.toFixed(
+                      2
+                    );
                   kcl =
-                    analise.report.resultSoil.productRecommended
-                      ?.recommendedKCL;
+                    analise.report.resultSoil.productRecommended?.recommendedKCL.toFixed(
+                      2
+                    );
 
                   mineral_ca =
                     analise.report.resultSoil.productRecommended?.minerals?.ca;
@@ -475,17 +486,20 @@ const Page: NextPage = () => {
                     mg_ctc_desejado =
                       analise.report.resultSoil.expectativeResult.K;
                     k_ctc_desejado =
-                      analise.report.resultSoil.expectativeResult.Mg;
+                      analise.report.resultSoil.expectativeResult.Mg.toFixed(2);
                   }
 
                   if (analise.report.resultSoil.measureResult) {
-                    ca_ctc_solo = analise.report.resultSoil.measureResult.Ca;
-                    mg_ctc_solo = analise.report.resultSoil.measureResult.K;
-                    k_ctc_solo = analise.report.resultSoil.measureResult.Mg;
+                    ca_ctc_solo =
+                      analise.report.resultSoil.measureResult.Ca.toFixed(2);
+                    mg_ctc_solo =
+                      analise.report.resultSoil.measureResult.K.toFixed(2);
+                    k_ctc_solo =
+                      analise.report.resultSoil.measureResult.Mg.toFixed(2);
                   }
 
                   relacao_ctc_solo =
-                    analise.report.resultSoil.relationCaMgMeasure;
+                    analise.report.resultSoil.relationCaMgMeasure.toFixed(2);
                   relacao_ctc_desejado =
                     analise.report.resultSoil.relationCaMgExpectative;
                 }
@@ -499,11 +513,11 @@ const Page: NextPage = () => {
                   k_desejado = analise.report.realResult.realMeasureResult?.K;
                   mg_desejado = analise.report.realResult.realMeasureResult?.Mg;
                   valor_calculo =
-                    analise.report.realResult.realMeasureResult?.V;
+                    analise.report.realResult.realMeasureResult?.V.toFixed(2);
 
                   kcl_recomendado = analise.report.realResult.recommendedKCL;
                   porcentagem_planta =
-                    analise.report.realResult.percentageFromPlant;
+                    analise.report.realResult.percentageFromPlant.toFixed(2);
 
                   calc_real_qtd_ca = analise.report.realResult.qtdCa;
                   calc_real_qtd_mg = analise.report.realResult.qtdMg;
@@ -514,52 +528,24 @@ const Page: NextPage = () => {
                 id: analise.id,
                 active: analise.active,
                 tipo_analise: analise.tipo_aplicacao,
-                createdAt: analise.createdAt,
-                startDate: analise.startDate,
-                endDate: analise.endDate,
 
                 consultant_name: analise.consultant.user.name ?? "",
                 consultant_email: analise.consultant.user.email ?? "",
+                consultant_city: analise.consultant.user.city.name ?? "",
+                consultant_state: analise.consultant.user.state.name ?? "",
+
+                producer_name: analise.producer.name ?? "",
+                producer_email: analise.producer.email ?? "",
+                producer_city: analise.producer.city.name ?? "",
+                producer_state: analise.producer.state.name ?? "",
+                producer_area: analise.producer.area ?? "",
+                producer_technology: analise.producer.technology ?? "",
 
                 culture_name: analise.culture.name ?? "",
                 culture_lang: analise.culture.lang ?? "",
 
-                producer_name: analise.producer.name ?? "",
-                producer_email: analise.producer.email ?? "",
-                producer_area: analise.producer.area ?? "",
-                producer_technology: analise.producer.technology ?? "",
-
-                product_name: analise.product.name ?? "",
-                product_productionExpectation:
-                  analise.productionExpectation ?? "",
-
-                qtd_ca_entregue: qtd_ca_entregue ?? "",
-                qtd_si_entregue: qtd_si_entregue ?? "",
-                qtd_mg_entregue: qtd_mg_entregue ?? "",
-                qtd_b_entregue: qtd_b_entregue ?? "",
-                qtd_s_entregue: qtd_s_entregue ?? "",
-                qtd_n_entregue: qtd_n_entregue ?? "",
-
-                dosage_description: dosage_description ?? "",
-                dosage_value: dosage_value ?? "",
-
-                calcio_export: calcio_export ?? "",
-                calcio_extract: calcio_extract ?? "",
-
-                enxofre_export: enxofre_export ?? "",
-                enxofre_extract: enxofre_extract ?? "",
-
-                fosforo_export: fosforo_export ?? "",
-                fosforo_extract: fosforo_extract ?? "",
-
-                magnesio_export: magnesio_export ?? "",
-                magnesio_extract: magnesio_extract ?? "",
-
-                nitrogenio_export: nitrogenio_export ?? "",
-                nitrogenio_extract: nitrogenio_extract ?? "",
-
-                potassio_export: potassio_export ?? "",
-                potassio_extract: potassio_extract ?? "",
+                createdAt: analise.createdAt,
+                startDate: analise.startDate,
 
                 ca_ctc_solo: ca_ctc_solo ?? "",
                 ca_ctc_desejado: ca_ctc_desejado ?? "",
@@ -573,26 +559,58 @@ const Page: NextPage = () => {
                 relacao_ctc_solo: relacao_ctc_solo ?? "",
                 relacao_ctc_desejado: relacao_ctc_desejado ?? "",
 
+                calcio_extract: calcio_extract ?? "",
+                calcio_export: calcio_export ?? "",
+
+                magnesio_extract: magnesio_extract ?? "",
+                magnesio_export: magnesio_export ?? "",
+
+                potassio_extract: potassio_extract ?? "",
+                potassio_export: potassio_export ?? "",
+
+                fosforo_extract: fosforo_extract ?? "",
+                fosforo_export: fosforo_export ?? "",
+
+                enxofre_extract: enxofre_extract ?? "",
+                enxofre_export: enxofre_export ?? "",
+
+                nitrogenio_extract: nitrogenio_extract ?? "",
+                nitrogenio_export: nitrogenio_export ?? "",
+
                 dose_recomendada: dose_recomendada ?? "",
                 kcl: kcl ?? "",
+
+                product_name: analise.product.name ?? "",
+                product_productionExpectation:
+                  analise.productionExpectation ?? "",
+
+                qtd_ca_entregue: qtd_ca_entregue ?? "",
+                qtd_mg_entregue: qtd_mg_entregue ?? "",
+                qtd_si_entregue: qtd_si_entregue ?? "",
+                qtd_b_entregue: qtd_b_entregue ?? "",
+                qtd_s_entregue: qtd_s_entregue ?? "",
+                qtd_n_entregue: qtd_n_entregue ?? "",
 
                 mineral_ca: mineral_ca ?? "",
                 mineral_si: mineral_si ?? "",
                 mineral_mg: mineral_mg ?? "",
                 mineral_b: mineral_b ?? "",
-                mineral_n: mineral_n ?? "",
                 mineral_s: mineral_s ?? "",
+                mineral_n: mineral_n ?? "",
+
+                dosage_description: dosage_description ?? "",
+                dosage_value: dosage_value ?? "",
 
                 teor_argila: teor_argila ?? "",
+                mg_desejado: mg_desejado ?? "",
                 ca_desejado: ca_desejado ?? "",
                 k_desejado: k_desejado ?? "",
-                mg_desejado: mg_desejado ?? "",
-
-                kcl_recomendado: kcl_recomendado ?? "",
-                porcentagem_planta: porcentagem_planta ?? "",
 
                 calc_real_qtd_ca: calc_real_qtd_ca ?? "",
                 calc_real_qtd_mg: calc_real_qtd_mg ?? "",
+
+                kcl_recomendado: kcl_recomendado ?? "",
+                porcentagem_planta: porcentagem_planta ?? "",
 
                 valor_calculo: valor_calculo ?? "",
               };
