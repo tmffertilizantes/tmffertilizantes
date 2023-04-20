@@ -512,89 +512,115 @@ const Page: NextPage = () => {
 
               return {
                 id: analise.id,
-                active: analise.active,
-                tipo_analise: analise.tipo_aplicacao,
-                createdAt: analise.createdAt,
-                startDate: analise.startDate,
-                endDate: analise.endDate,
+                Ativo: analise.active,
+                "Tipo de Análise": analise.tipo_aplicacao,
 
-                consultant_name: analise.consultant.user.name ?? "",
-                consultant_email: analise.consultant.user.email ?? "",
+                "Nome do Consultor": analise.consultant.user.name ?? "",
+                "Email do Consultor": analise.consultant.user.email ?? "",
+                "Cidade do Consultor": analise.consultant.user.city.name ?? "",
+                "Estado do Consultor": analise.consultant.user.state.name ?? "",
 
-                culture_name: analise.culture.name ?? "",
-                culture_lang: analise.culture.lang ?? "",
+                "Nome do Produtor": analise.producer.name ?? "",
+                "Email do Produtor": analise.producer.email ?? "",
+                "Cidade do Produtor": analise.producer.city.name ?? "",
+                "Estado do Produtor": analise.producer.state.name ?? "",
+                "Área do Produtor": analise.producer.area ?? "",
+                "Tecnologia no Campo": analise.producer.technology ?? "",
 
-                producer_name: analise.producer.name ?? "",
-                producer_email: analise.producer.email ?? "",
-                producer_area: analise.producer.area ?? "",
-                producer_technology: analise.producer.technology ?? "",
+                "Nome da Cultura": analise.culture.name ?? "",
 
-                product_name: analise.product.name ?? "",
-                product_productionExpectation:
-                  analise.productionExpectation ?? "",
+                "Criado em": analise.createdAt,
+                "Data de Início": analise.startDate,
 
-                qtd_ca_entregue: qtd_ca_entregue ?? "",
-                qtd_si_entregue: qtd_si_entregue ?? "",
-                qtd_mg_entregue: qtd_mg_entregue ?? "",
-                qtd_b_entregue: qtd_b_entregue ?? "",
-                qtd_s_entregue: qtd_s_entregue ?? "",
-                qtd_n_entregue: qtd_n_entregue ?? "",
+                "Ca na CTC do Solo": parseFloat(ca_ctc_solo).toFixed(2) ?? "",
+                "Ca na CTC Desejado":
+                  parseFloat(ca_ctc_desejado).toFixed(2) ?? "",
 
-                dosage_description: dosage_description ?? "",
-                dosage_value: dosage_value ?? "",
+                "Mg na CTC do solo": parseFloat(mg_ctc_solo).toFixed(2) ?? "",
+                "Mg na CTC desejado":
+                  parseFloat(mg_ctc_desejado).toFixed(2) ?? "",
 
-                calcio_export: calcio_export ?? "",
-                calcio_extract: calcio_extract ?? "",
+                "K na CTC do solo": parseFloat(k_ctc_solo).toFixed(2) ?? "",
+                "K na CTC desejado":
+                  parseFloat(k_ctc_desejado).toFixed(2) ?? "",
 
-                enxofre_export: enxofre_export ?? "",
-                enxofre_extract: enxofre_extract ?? "",
+                "Relação Ca/Mg do solo":
+                  parseFloat(relacao_ctc_solo).toFixed(2) ?? "",
+                "Relação Ca/Mg desejado":
+                  parseFloat(relacao_ctc_desejado).toFixed(2) ?? "",
 
-                fosforo_export: fosforo_export ?? "",
-                fosforo_extract: fosforo_extract ?? "",
+                "Extração de Calcio":
+                  parseFloat(calcio_extract).toFixed(2) ?? "",
+                "Exportação de Calcio":
+                  parseFloat(calcio_export).toFixed(2) ?? "",
 
-                magnesio_export: magnesio_export ?? "",
-                magnesio_extract: magnesio_extract ?? "",
+                "Extração de Magnesio":
+                  parseFloat(magnesio_extract).toFixed(2) ?? "",
+                "Exportação de Magnesio":
+                  parseFloat(magnesio_export).toFixed(2) ?? "",
 
-                nitrogenio_export: nitrogenio_export ?? "",
-                nitrogenio_extract: nitrogenio_extract ?? "",
+                "Extração de Potassio":
+                  parseFloat(potassio_extract).toFixed(2) ?? "",
+                "Exportação de Potassio":
+                  parseFloat(potassio_export).toFixed(2) ?? "",
 
-                potassio_export: potassio_export ?? "",
-                potassio_extract: potassio_extract ?? "",
+                "Extração de Fosforo":
+                  parseFloat(fosforo_extract).toFixed(2) ?? "",
+                "Exportação de Fosforo":
+                  parseFloat(fosforo_export).toFixed(2) ?? "",
 
-                ca_ctc_solo: ca_ctc_solo ?? "",
-                ca_ctc_desejado: ca_ctc_desejado ?? "",
+                "Extração de Enxofre":
+                  parseFloat(enxofre_extract).toFixed(2) ?? "",
+                "Exportação de Enxofre":
+                  parseFloat(enxofre_export).toFixed(2) ?? "",
 
-                mg_ctc_solo: mg_ctc_solo ?? "",
-                mg_ctc_desejado: mg_ctc_desejado ?? "",
+                "Extração de Nitrogenio":
+                  parseFloat(nitrogenio_extract).toFixed(2) ?? "",
+                "Exportação de Nitrogenio":
+                  parseFloat(nitrogenio_export).toFixed(2) ?? "",
 
-                k_ctc_solo: k_ctc_solo ?? "",
-                k_ctc_desejado: k_ctc_desejado ?? "",
+                Produto: analise.product.name ?? "",
+                "Expectativa do Produto": analise.productionExpectation ?? "",
 
-                relacao_ctc_solo: relacao_ctc_solo ?? "",
-                relacao_ctc_desejado: relacao_ctc_desejado ?? "",
+                "Qtde Ca(Kg) entregue":
+                  parseFloat(qtd_ca_entregue).toFixed(2) ?? "",
+                "Qtde Mg(Kg) entregue":
+                  parseFloat(qtd_mg_entregue).toFixed(2) ?? "",
+                "Qtde Si(Kg) entregue":
+                  parseFloat(qtd_si_entregue).toFixed(2) ?? "",
+                "Qtde B(Kg) entregue":
+                  parseFloat(qtd_b_entregue).toFixed(2) ?? "",
+                "Qtde S(Kg) entregue":
+                  parseFloat(qtd_s_entregue).toFixed(2) ?? "",
+                "Qtde N(Kg) entregue":
+                  parseFloat(qtd_n_entregue).toFixed(2) ?? "",
+                "Dose Recomendada":
+                  parseFloat(dose_recomendada).toFixed(2) ?? "",
+                KCL: parseFloat(kcl).toFixed(2) ?? "",
 
-                dose_recomendada: dose_recomendada ?? "",
-                kcl: kcl ?? "",
+                "Mineral Ca": parseFloat(mineral_ca).toFixed(2) ?? "",
+                "Mineral Si": parseFloat(mineral_si).toFixed(2) ?? "",
+                "Mineral Mg": parseFloat(mineral_mg).toFixed(2) ?? "",
+                "Mineral B": parseFloat(mineral_b).toFixed(2) ?? "",
+                "Mineral S": parseFloat(mineral_s).toFixed(2) ?? "",
+                "Mineral N": parseFloat(mineral_n).toFixed(2) ?? "",
 
-                mineral_ca: mineral_ca ?? "",
-                mineral_si: mineral_si ?? "",
-                mineral_mg: mineral_mg ?? "",
-                mineral_b: mineral_b ?? "",
-                mineral_n: mineral_n ?? "",
-                mineral_s: mineral_s ?? "",
+                "Descrição da Dose": dosage_description ?? "",
+                "Dosagem Real": parseFloat(dosage_value).toFixed(2) ?? "",
 
-                teor_argila: teor_argila ?? "",
-                ca_desejado: ca_desejado ?? "",
-                k_desejado: k_desejado ?? "",
-                mg_desejado: mg_desejado ?? "",
+                "Teor Argila Desejado": teor_argila ?? "",
+                "Mg Desejado": parseFloat(mg_desejado).toFixed(2) ?? "",
+                "Ca Desejado": parseFloat(ca_desejado).toFixed(2) ?? "",
+                "K Desejado": parseFloat(k_desejado).toFixed(2) ?? "",
 
-                kcl_recomendado: kcl_recomendado ?? "",
-                porcentagem_planta: porcentagem_planta ?? "",
+                "Qtd Ca Real": parseFloat(calc_real_qtd_ca).toFixed(2) ?? "",
+                "Qtd Mg Real": parseFloat(calc_real_qtd_mg).toFixed(2) ?? "",
 
-                calc_real_qtd_ca: calc_real_qtd_ca ?? "",
-                calc_real_qtd_mg: calc_real_qtd_mg ?? "",
+                "KCL Recomendado": parseFloat(kcl_recomendado).toFixed(2) ?? "",
+                "Porcentagem da Planta":
+                  parseFloat(porcentagem_planta).toFixed(2) ?? "",
 
-                valor_calculo: valor_calculo ?? "",
+                "Valor Calculo": parseFloat(valor_calculo).toFixed(2) ?? "",
               };
             });
 
