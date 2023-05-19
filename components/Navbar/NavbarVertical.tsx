@@ -42,6 +42,12 @@ export default function NavBar() {
                 </li>
 
                 <li className="nav-item">
+                  <Link href="/registro-de-consultores">
+                    <a className="nav-link">Registros de consultores</a>
+                  </Link>
+                </li>
+
+                <li className="nav-item">
                   <Link href="/produtores">
                     <a className="nav-link">Produtores</a>
                   </Link>

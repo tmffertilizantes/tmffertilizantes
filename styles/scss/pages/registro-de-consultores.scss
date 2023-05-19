@@ -1,0 +1,17 @@
+.modalExport {
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .input-box {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
+      input {
+        color-scheme: light;
+      }
+    }
+  }
+}

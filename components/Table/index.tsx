@@ -236,10 +236,12 @@ export const Table = ({
   columns = [],
   data = [],
   hooks = [],
+  asConsultantRegister = false,
 }: {
   columns: Array<Column<object>>;
   data: Array<any>;
   hooks?: Array<any>;
+  asConsultantRegister?: boolean;
 }) => {
   const defaultColumn = React.useMemo(
     () => ({
@@ -303,6 +305,8 @@ export const Table = ({
       defaultColumn,
       // @ts-ignore
       filterTypes,
+      autoResetFilters: false,
+      autoResetPage: false,
     },
     useFilters,
     useGlobalFilter,
@@ -311,6 +315,39 @@ export const Table = ({
     ...hooks
   );
 
+  function getTotalRows() {
+    let total_rows = 0;
+
+    rows.forEach((element: any) => {
+      total_rows += 1;
+    });
+
+    return total_rows;
+  }
+
+  function getTotalAnalises() {
+    let total_analises = 0;
+
+    rows.forEach((element: any) => {
+      total_analises += element.original.registered?.plant_nutrition ?? 0;
+      total_analises += element.original.registered?.solo_construct ?? 0;
+      total_analises += element.original.registered?.production_cost ?? 0;
+      total_analises += element.original.registered?.tmf_cost ?? 0;
+    });
+
+    return total_analises;
+  }
+
+  function getTotalProducers() {
+    let total = 0;
+
+    rows.forEach((element: any) => {
+      total += element.original.registered?.producers ?? 0;
+    });
+
+    return total;
+  }
+
   return (
     <div>
       <GlobalFilter
@@ -318,6 +355,16 @@ export const Table = ({
         globalFilter={state.globalFilter}
         setGlobalFilter={setGlobalFilter}
       />
+
+      {asConsultantRegister && (
+        <>
+          <div className="mb-4">
+            Total de consultores: <b>{getTotalRows()}</b> | Total de produtores:{" "}
+            <b>{getTotalProducers()}</b> | Total de análises:{" "}
+            <b>{getTotalAnalises()}</b>
+          </div>
+        </>
+      )}
 
       <div className="card">
         <table {...getTableProps()} className="table mb-0 text-nowrap">
@@ -371,7 +418,6 @@ export const Table = ({
           </tbody>
         </table>
       </div>
-
       <div className="container-fluid px-4 py-2">
         <div className="row">
           <div className="col">
