@@ -215,8 +215,10 @@ dataConfig: {
 */
 
 const PostType = ({
+  queryParams = null,
   initialPostData = null,
   removeAddButton = false,
+  exportConsultantRegistrationButton = false,
   exportButton = true,
   csvData = null,
   csvHeaders = null,
@@ -232,15 +234,23 @@ const PostType = ({
     removeFn = defaultRemoveFn,
     removeUrlFn = defaultUrlFn,
   } = {},
-  tableConfig: { columnsFn = defaultColumnsFn } = {},
+  tableConfig: {
+    columnsFn = defaultColumnsFn,
+    asConsultantRegister = false,
+  } = {},
   formConfig: { fields = [], insertTitle = "", editTitle = "" } = {},
   pageConfig: { pageTitle = "" } = {},
+  clickDateButton,
 }: any) => {
   const isDefaultPostDataStarted = useRef(false);
 
   const [show, setShow] = useState(false);
   const [post, setPost] = useState<any>({});
   const [language, setLanguage] = useState<string>("pt-BR");
+
+  useEffect(() => {
+    reloadData();
+  }, [queryParams]);
 
   useEffect(() => {
     if (initialPostData && !isDefaultPostDataStarted.current) {
@@ -376,11 +386,20 @@ const PostType = ({
               </div>
 
               <div className="d-flex gap-2">
+                {posts && exportConsultantRegistrationButton && (
+                  <button
+                    className="btn btn-outline-primary"
+                    onClick={clickDateButton}
+                  >
+                    Definir período
+                  </button>
+                )}
                 {posts && exportButton && (
                   <CSVLink
                     className="btn btn-outline-primary"
                     data={csvData ?? posts}
                     headers={csvHeaders ?? false}
+                    enclosingCharacter={""}
                   >
                     Exportar
                   </CSVLink>
@@ -431,7 +450,11 @@ const PostType = ({
                       )}
                     />
                   ) : (
-                    <Table columns={columns} data={posts} />
+                    <Table
+                      columns={columns}
+                      data={posts}
+                      asConsultantRegister={asConsultantRegister}
+                    />
                   )}
                 </div>
               </div>
