@@ -1,7 +1,11 @@
 import { AlertError, AlertItemEdited } from "@components/Alerts/Alerts";
 import LayoutDefault from "@components/Layouts/default";
 import { PostType } from "@components/postType";
-import { DateColumnFilter, NoFilter } from "@components/Table";
+import {
+  DateColumnFilter,
+  NoFilter,
+  SelectColumnFilter,
+} from "@components/Table";
 import EditButton from "@components/Utils/Buttons/EditButton";
 import RemoveButton from "@components/Utils/Buttons/RemoveButton";
 import StatusButton from "@components/Utils/Buttons/StatusButton";
@@ -553,7 +557,7 @@ export default function Consultores() {
     () =>
       [
         {
-          Header: "Name",
+          Header: "Nome",
           accessor: "user.name",
         },
         {
@@ -566,9 +570,10 @@ export default function Consultores() {
         },
         {
           Header: "Aprovado",
-          accessor: "user.status",
+          accessor: "user_status",
+          Filter: SelectColumnFilter,
           Cell: ({ value = "" }) => (
-            <span>{value === "approved" ? "✓" : "✖"}</span>
+            <span>{value === "Aprovado" ? "✓" : "✖"}</span>
           ),
         },
         {
@@ -647,7 +652,17 @@ export default function Consultores() {
           fetcherDataFn: (response: AxiosResponse) => {
             const consultant = response.data.consultants;
 
+            var consultant_list: any[] = [];
+
             var data_for_csv = consultant.map((consultant: any) => {
+              consultant_list.push({
+                ...consultant,
+                user_status:
+                  consultant.user.status == "approved"
+                    ? "Aprovado"
+                    : "Reprovado",
+              });
+
               return {
                 id: consultant.id,
                 active: consultant.active,
@@ -667,7 +682,9 @@ export default function Consultores() {
 
             setCsvData(data_for_csv);
 
-            return consultant;
+            console.log(consultant_list);
+
+            return consultant_list;
           },
           updateUrlFn: (url = "", id = "") =>
             `${process.env.API_URL}/user/${id}`,
