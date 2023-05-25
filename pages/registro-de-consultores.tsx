@@ -52,7 +52,7 @@ export default function RegistroDeConsultores() {
     () =>
       [
         {
-          Header: "Name",
+          Header: "Nome",
           accessor: "name",
         },
         {

@@ -49,6 +49,39 @@ export const NoFilter = () => {
   return <></>;
 };
 
+export function SelectColumnFilter({
+  column: { filterValue, preFilteredRows, setFilter },
+}: any) {
+  const count = preFilteredRows.length;
+
+  return (
+    <div className="SearchBar SearchBar--secondary position-relative mt-1 d-flex align-items-center">
+      <span className="position-absolute search-icon h-100 px-1 d-flex align-items-center">
+        <i className="fe fe-search"></i>
+      </span>
+
+      <select
+        className="form-select form-select-sm ps-5"
+        name=""
+        id=""
+        onChange={(e) => {
+          setFilter(e.target.value || undefined);
+        }}
+      >
+        <option value="" selected={filterValue == undefined}>
+          Buscar...
+        </option>
+        <option value="Aprovado" selected={filterValue == "Aprovado"}>
+          Aprovado
+        </option>
+        <option value="Reprovado" selected={filterValue == "Reprovado"}>
+          Reprovado
+        </option>
+      </select>
+    </div>
+  );
+}
+
 function DefaultColumnFilter({
   column: { filterValue, preFilteredRows, setFilter },
 }: any) {
@@ -306,6 +339,7 @@ export const Table = ({
       // @ts-ignore
       filterTypes,
       autoResetFilters: false,
+      autoResetGlobalFilter: false,
       autoResetPage: false,
     },
     useFilters,
