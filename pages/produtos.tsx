@@ -153,10 +153,28 @@ export default function Produtos() {
       ),
     },
     {
-      field: "parameter",
-      label: "Parâmetro",
-      placeholder: "230",
-      type: "number",
+      Component: ({ post, setPost }: CustomComponent) => (
+        <div className="mb-3">
+          <label className="form-label" htmlFor="parameter">
+            Parâmetro
+          </label>
+
+          <input
+            defaultValue={post.parameter}
+            onChange={function (e) {
+              setPost({
+                ...post,
+                parameter: parseInt(e.target.value),
+              });
+            }}
+            type="number"
+            step="1"
+            id="parameter"
+            className="form-control"
+            placeholder="230"
+          />
+        </div>
+      ),
     },
     {
       Component: ({ post, setPost }: CustomComponent) => (

@@ -1,12 +1,22 @@
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: hsl(140deg 55% 16%);
 }
 
-.ql-editor{
+.ql-editor {
   min-height: 200px;
   background-color: #fff;
 }
 
 .input-light {
   color-scheme: light;
+}
+
+.form-select-sm {
+  padding-top: 1px;
+  padding-bottom: 1px;
 }
