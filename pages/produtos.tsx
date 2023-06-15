@@ -232,7 +232,7 @@ export default function Produtos() {
 
           <div className="mb-3">
             <label className="form-label" htmlFor="minerals.b">
-              Bório
+              Boro
             </label>
 
             <input
