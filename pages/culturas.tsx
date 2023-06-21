@@ -15,7 +15,7 @@ const Page: NextPage = () => {
   const { token = "" } = useGlobal();
   const url = `${process.env.API_URL}/culture`;
 
-  const [language, setLanguage] = useState("pt-br");
+  const [language, setLanguage] = useState("pt-BR");
 
   const fields = [
     {
@@ -53,7 +53,7 @@ const Page: NextPage = () => {
 
     data = {
       active: true,
-    }
+    };
 
     if (language) {
       data = {
