@@ -1050,7 +1050,10 @@ const Page: NextPage = () => {
                       <h4>
                         Produto Recomendado:{" "}
                         <span className="fw-normal">
-                          {currentPost.product.name}
+                          {
+                            currentPost.report?.resultSoil?.productRecommended
+                              ?.name
+                          }
                         </span>
                       </h4>
                       Programa de formaçāo de perfil de solo
