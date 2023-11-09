@@ -178,7 +178,7 @@ const Page: NextPage = () => {
             const currentPost = getPost(value);
 
             return (
-              <div>
+              <div className="text-end d-flex justify-content-end">
                 <EditButton
                   className="me-2"
                   onClick={() => {

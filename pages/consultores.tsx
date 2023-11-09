@@ -577,6 +577,10 @@ export default function Consultores() {
           ),
         },
         {
+          Header: "Revenda",
+          accessor: "resale.name",
+        },
+        {
           Header: "Criado Em",
           accessor: "user.createdAt",
           Filter: DateColumnFilter,
@@ -593,7 +597,7 @@ export default function Consultores() {
             const currentPost = getPost(value);
 
             return (
-              <div className="text-end">
+              <div className="text-end d-flex">
                 <EditButton
                   className="me-2"
                   onClick={() => {

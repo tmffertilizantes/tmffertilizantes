@@ -401,7 +401,7 @@ export const Table = ({
       )}
 
       <div className="card">
-        <table {...getTableProps()} className="table mb-0 text-nowrap">
+        <table {...getTableProps()} className="table mb-0">
           <thead className="table-light">
             {headerGroups.map((headerGroup) => {
               const { key, ...restHeaderProps } =
