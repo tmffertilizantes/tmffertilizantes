@@ -120,7 +120,7 @@ const Page: NextPage = () => {
             const currentPost = getPost(value);
 
             return (
-              <div>
+              <div className="text-end d-flex justify-content-end">
                 <ShowButton
                   className="me-2"
                   onClick={async () => {

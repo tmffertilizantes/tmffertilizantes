@@ -1,0 +1,215 @@
+import { PostType } from "@components";
+import { NextPage } from "next";
+import { useGlobal } from "@context/global";
+import LayoutDefault from "@components/Layouts/default";
+import SelectLanguage from "@components/Utils/SelectLanguage";
+import { useMemo, useState, useRef } from "react";
+import axios, { AxiosResponse } from "axios";
+import useSWR from "swr";
+import Select from "react-select";
+
+interface CustomComponent {
+  post: any;
+  setPost: Function;
+}
+
+const fetcherCategories = (url = "", token = "") =>
+  axios
+    .get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => res.data.categories);
+
+const Page: NextPage = () => {
+  const { token = "" } = useGlobal();
+  const url = `${process.env.API_URL}/material`;
+  const upload_url = `${process.env.API_URL}/upload`;
+
+  const [language, setLanguage] = useState("pt-br");
+  const [fileLabel, setFileLabel] = useState("");
+  const hiddenFileInput = useRef<HTMLInputElement>(null);
+
+  const fields = [
+    {
+      field: "name",
+      label: "Nome",
+      placeholder: "Exemplo",
+      customEvents: (setCategoria: (arg0: (categoria: any) => any) => any) => ({
+        onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+          setCategoria((categoria) => ({
+            ...categoria,
+            name: e.target.value,
+            slug: e.target.value
+              .toLowerCase()
+              .replace(/ /g, "_")
+              .replace(/[^\w-]+/g, ""),
+          })),
+      }),
+    },
+    {
+      Component: ({ post, setPost }: CustomComponent) => (
+        <div>
+          <label className="form-label">Categoria</label>
+
+          <Select
+            value={categories_as_options.find(
+              (category: any) => category.value === post.categoryId
+            )}
+            placeholder="Selecione a categoria..."
+            classNamePrefix="select"
+            className="mb-4"
+            options={categories_as_options}
+            onChange={(newValue: any) => {
+              setPost({
+                ...post,
+                categoryId: newValue.value,
+              });
+            }}
+          />
+        </div>
+      ),
+    },
+    {
+      Component: ({ post, setPost }: CustomComponent) => (
+        <>
+          <p className="form-label">Arquivo do material</p>
+
+          {post.file && (
+            <a
+              className="btn btn-outline-secondary btn-xs mb-2"
+              href={post.file}
+              rel="noreferrer"
+              target="_blank"
+            >
+              Visualizar arquivo
+            </a>
+          )}
+
+          <div></div>
+
+          <button
+            className="btn btn-primary btn-xs"
+            onClick={(event) => hiddenFileInput?.current?.click()}
+          >
+            Enviar {post.file ? "novo" : ""} arquivo
+          </button>
+
+          <input
+            className="d-none"
+            type="file"
+            ref={hiddenFileInput}
+            onChange={(event) => {
+              let files = event.target.files;
+
+              if (files && files[0]) {
+                const file = files[0] ?? null;
+                const formData = new FormData();
+                formData.append("file", file);
+
+                setFileLabel("Enviando arquivo...");
+
+                axios
+                  .post(upload_url, formData, {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                      "Content-Type": "multipart/form-data",
+                    },
+                  })
+                  .then((response) => {
+                    setFileLabel(file.name);
+                    setPost({ ...post, file: response.data.file });
+                  })
+                  .catch((error) => {
+                    setFileLabel(
+                      "Ocorreu um erro ao enviar o arquivo, tente novamente."
+                    );
+
+                    if (error.response) {
+                      console.error(error.response.data); // => the response payload
+                    }
+                  });
+              }
+            }}
+          />
+
+          <p>{fileLabel}</p>
+        </>
+      ),
+    },
+    {
+      Component: ({ post, setPost }: CustomComponent) => (
+        <SelectLanguage
+          className="mb-4"
+          value={post.lang ? post.lang : language}
+          onChange={(event) => {
+            setLanguage(event.target.value);
+            setPost({ ...post, lang: event.target.value });
+          }}
+        />
+      ),
+    },
+  ];
+
+  const { data: categories, error } = useSWR(
+    [`${process.env.API_URL}/materialCategory`, token],
+    fetcherCategories
+  );
+
+  const categories_as_options = useMemo(
+    () =>
+      categories?.map((category: { id: any; name: any }) => ({
+        value: category.id,
+        label: category.name,
+      })) || [],
+    [categories]
+  );
+
+  const initialData = useMemo(() => {
+    let data = null;
+
+    data = {
+      active: true,
+    };
+
+    if (categories_as_options && categories_as_options.length) {
+      data = {
+        ...data,
+        categoryId: categories_as_options[0].value,
+      };
+    }
+
+    if (language) {
+      data = {
+        ...data,
+        lang: language,
+      };
+    }
+
+    return data;
+  }, [categories_as_options]);
+
+  return (
+    <LayoutDefault>
+      <PostType
+        initialPostData={initialData}
+        dataConfig={{
+          url,
+          token,
+          fetcherDataFn: (response: AxiosResponse) => response.data.materials,
+        }}
+        formConfig={{
+          insertTitle: "Adicionar Material",
+          editTitle: "Editar Material",
+          fields,
+        }}
+        pageConfig={{
+          pageTitle: "Materiais",
+        }}
+      />
+    </LayoutDefault>
+  );
+};
+
+export default Page;
