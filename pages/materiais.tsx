@@ -80,6 +80,7 @@ const Page: NextPage = () => {
             <a
               className="btn btn-outline-secondary btn-xs mb-2"
               href={post.file}
+              rel="noreferrer"
               target="_blank"
             >
               Visualizar arquivo
