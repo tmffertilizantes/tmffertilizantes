@@ -1,4 +1,5 @@
-import { PostType } from "@components";
+
+import { DateColumnFilter, NoFilter, PostType } from "@components";
 import { NextPage } from "next";
 import { useGlobal } from "@context/global";
 import LayoutDefault from "@components/Layouts/default";
@@ -7,6 +8,10 @@ import { useMemo, useState, useRef } from "react";
 import axios, { AxiosResponse } from "axios";
 import useSWR from "swr";
 import Select from "react-select";
+import { ColumnFn } from "models/ColumnFn";
+import EditButton from "@components/Utils/Buttons/EditButton";
+import StatusButton from "@components/Utils/Buttons/StatusButton";
+import RemoveButton from "@components/Utils/Buttons/RemoveButton";
 
 interface CustomComponent {
   post: any;
@@ -152,6 +157,51 @@ const Page: NextPage = () => {
     },
   ];
 
+  const colunas =
+    ({ onUpdate, onRemove, getPost, onStatusChange, reloadData }: ColumnFn) =>
+    () =>
+      [
+        {
+          Header: "Nome",
+          accessor: "name",
+        },
+        {
+          Header: "Criado Em",
+          accessor: "createdAt",
+          Filter: DateColumnFilter,
+          filter: "dateBetween",
+          Cell: ({ value = new Date() }) => (
+            <span>{new Date(value).toLocaleDateString()}</span>
+          ),
+        },
+        {
+          Header: "",
+          accessor: "id",
+          Filter: NoFilter,
+          Cell: ({ value = "" }) => {
+            const currentPost = getPost(value);
+
+            return (
+              <div className="text-end d-flex justify-content-end">
+                <EditButton
+                  className="me-2"
+                  onClick={() => {
+                    onUpdate(value);
+                  }}
+                />
+                {currentPost && (
+                  <StatusButton
+                    className="me-2"
+                    active={currentPost["active"]}
+                    onClick={() => onStatusChange(value, currentPost["active"])}
+                  />
+                )}
+                <RemoveButton onClick={() => onRemove(value)} />
+              </div>
+            );
+          },
+        },
+      ];
   const { data: categories, error } = useSWR(
     [`${process.env.API_URL}/materialCategory`, token],
     fetcherCategories
@@ -204,8 +254,14 @@ const Page: NextPage = () => {
           editTitle: "Editar Material",
           fields,
         }}
+        tableConfig={{
+          columnsFn: colunas,
+        }}
         pageConfig={{
           pageTitle: "Materiais",
+        }}
+        categoryFilter={{
+          categories: categories_as_options,
         }}
       />
     </LayoutDefault>
