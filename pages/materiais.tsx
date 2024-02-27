@@ -1,3 +1,4 @@
+
 import { DateColumnFilter, NoFilter, PostType } from "@components";
 import { NextPage } from "next";
 import { useGlobal } from "@context/global";
@@ -201,7 +202,6 @@ const Page: NextPage = () => {
           },
         },
       ];
-
   const { data: categories, error } = useSWR(
     [`${process.env.API_URL}/materialCategory`, token],
     fetcherCategories
