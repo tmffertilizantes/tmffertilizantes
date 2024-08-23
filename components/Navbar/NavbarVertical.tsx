@@ -1,7 +1,8 @@
-import Logo from "@components/Logo";
-import Link from "next/link";
-import NavLinkCollapse from "@components/Navbar/NavLinkCollapse";
-import { logout } from "@context/user";
+import Link from 'next/link';
+
+import Logo from '@components/Logo';
+import NavLinkCollapse from '@components/Navbar/NavLinkCollapse';
+import { logout } from '@context/user';
 
 export default function NavBar() {
   return (
@@ -142,7 +143,7 @@ export default function NavBar() {
           <li className="nav-item">
             <a className="nav-link" href="/custo-tmf-calcario">
               <i className="nav-icon fe fe-dollar-sign me-2"></i>Custo TMF x
-              Calcário
+              Concorrente
             </a>
           </li>
 
