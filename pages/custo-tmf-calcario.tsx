@@ -1,16 +1,17 @@
-import { DateColumnFilter, NoFilter, PostType } from "@components";
-import { NextPage } from "next";
-import { useGlobal } from "@context/global";
-import axios, { AxiosResponse } from "axios";
-import LayoutDefault from "@components/Layouts/default";
-import { useState } from "react";
-import ModalExibirPost from "@components/postType/ModalExibirPost";
-import { Col, Row, Spinner, Table } from "react-bootstrap";
-import { ColumnFn } from "models/ColumnFn";
-import ShowButton from "@components/Utils/Buttons/ShowButton";
-import { AlertError } from "@components/Alerts/Alerts";
-import { getUserLocation } from "@context/user";
-import StatusButton from "@components/Utils/Buttons/StatusButton";
+import axios, { AxiosResponse } from 'axios';
+import { ColumnFn } from 'models/ColumnFn';
+import { NextPage } from 'next';
+import { useState } from 'react';
+import { Col, Row, Spinner, Table } from 'react-bootstrap';
+
+import { DateColumnFilter, NoFilter, PostType } from '@components';
+import { AlertError } from '@components/Alerts/Alerts';
+import LayoutDefault from '@components/Layouts/default';
+import ModalExibirPost from '@components/postType/ModalExibirPost';
+import ShowButton from '@components/Utils/Buttons/ShowButton';
+import StatusButton from '@components/Utils/Buttons/StatusButton';
+import { useGlobal } from '@context/global';
+import { getUserLocation } from '@context/user';
 
 const Page: NextPage = () => {
   const { token = "" } = useGlobal();
@@ -264,12 +265,12 @@ const Page: NextPage = () => {
           columnsFn: colunas,
         }}
         pageConfig={{
-          pageTitle: "Custo TMF x Calcário",
+          pageTitle: "Custo TMF x Concorrente",
         }}
       />
 
       <ModalExibirPost
-        title="Custo TMF X Calcário"
+        title="Custo TMF X Concorrente"
         show={showModalExibir}
         onClose={onCloseModalExibir}
         pdf_url={currentPost.pdf_url}
