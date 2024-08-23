@@ -1,7 +1,8 @@
-import Logo from "@components/Logo";
-import Link from "next/link";
-import NavLinkCollapse from "@components/Navbar/NavLinkCollapse";
-import { logout } from "@context/user";
+import Link from 'next/link';
+
+import Logo from '@components/Logo';
+import NavLinkCollapse from '@components/Navbar/NavLinkCollapse';
+import { logout } from '@context/user';
 
 export default function NavBar() {
   return (
@@ -111,6 +112,28 @@ export default function NavBar() {
           </li>
 
           <li className="nav-item">
+            <NavLinkCollapse
+              title={"Materias"}
+              id={"materiais"}
+              icon={<i className="nav-icon fe fe-file me-2"></i>}
+            >
+              <ul className="nav flex-column mb-2">
+                <li className="nav-item">
+                  <Link href="/materiais">
+                    <a className="nav-link">Materiais</a>
+                  </Link>
+                </li>
+
+                <li className="nav-item">
+                  <Link href="/categorias-de-materiais">
+                    <a className="nav-link">Categorias</a>
+                  </Link>
+                </li>
+              </ul>
+            </NavLinkCollapse>
+          </li>
+
+          <li className="nav-item">
             <a className="nav-link" href="/custo-de-producao">
               <i className="nav-icon fe fe-dollar-sign me-2"></i>Custo de
               produção
@@ -120,7 +143,7 @@ export default function NavBar() {
           <li className="nav-item">
             <a className="nav-link" href="/custo-tmf-calcario">
               <i className="nav-icon fe fe-dollar-sign me-2"></i>Custo TMF x
-              Calcário
+              Concorrente
             </a>
           </li>
 

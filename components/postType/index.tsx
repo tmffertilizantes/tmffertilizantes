@@ -24,6 +24,7 @@ import {
 import SelectLanguage from "@components/Utils/SelectLanguage";
 import StatusButton from "@components/Utils/Buttons/StatusButton";
 import { CSVLink } from "react-csv";
+import Select from "react-select";
 
 interface DefaultColumnsFn {
   onUpdate: Function;
@@ -53,6 +54,11 @@ interface ModalAddPost {
   editTitle: string;
   onClose: () => void;
   onConfirm: () => void;
+}
+
+interface CategoryFilter {
+  value: string;
+  label: string;
 }
 
 const defaultUrlFn = (url = "", id = "") => `${url}/${id}`;
@@ -240,13 +246,17 @@ const PostType = ({
   } = {},
   formConfig: { fields = [], insertTitle = "", editTitle = "" } = {},
   pageConfig: { pageTitle = "" } = {},
+  categoryFilter: { categories = [] } = {},
   clickDateButton,
 }: any) => {
   const isDefaultPostDataStarted = useRef(false);
 
-  const [show, setShow] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [post, setPost] = useState<any>({});
   const [language, setLanguage] = useState<string>("pt-BR");
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter | null>(
+    null
+  );
 
   useEffect(() => {
     reloadData();
@@ -272,8 +282,8 @@ const PostType = ({
     fetcherFn(fetcherDataFn, ...data)
   );
 
-  const onClose = () => {
-    setShow(false);
+  const closeModal = () => {
+    setShowModal(false);
     setPost({});
   };
 
@@ -287,7 +297,7 @@ const PostType = ({
   const onUpdate = useCallback(
     (id: any) => {
       setPost(posts.find((post: { id: any }) => post.id === id));
-      setShow(true);
+      setShowModal(true);
     },
     [posts]
   );
@@ -325,7 +335,7 @@ const PostType = ({
         removeFn(removeUrlFn(url, id), url, options, fetcherDataFn),
         data
       );
-      onClose();
+      closeModal();
     },
     [posts, options, mutate]
   );
@@ -334,7 +344,7 @@ const PostType = ({
     mutate([url, options]);
   };
 
-  const onConfirm = () => {
+  const saveModalData = () => {
     const config = { rollbackOnError: true, optimisticData: [{}] };
 
     if (post.id) {
@@ -359,7 +369,7 @@ const PostType = ({
       );
     }
 
-    onClose();
+    closeModal();
   };
 
   const columns: any = useMemo(
@@ -373,6 +383,24 @@ const PostType = ({
     } else {
       return false;
     }
+  }
+
+  function getTableData() {
+    let table_data = posts;
+
+    if (hasMultipleLanguages()) {
+      table_data = table_data.filter(
+        (post: any) => post.lang.toLowerCase() == language.toLowerCase()
+      );
+    }
+
+    if (categoryFilter) {
+      table_data = table_data.filter(
+        (post: any) => post.categoryId == categoryFilter.value
+      );
+    }
+
+    return table_data;
   }
 
   return (
@@ -409,7 +437,7 @@ const PostType = ({
                     <a
                       href="#"
                       onClick={() => {
-                        setShow(true);
+                        setShowModal(true);
                       }}
                       className="btn btn-primary"
                       data-bs-toggle="modal"
@@ -438,24 +466,34 @@ const PostType = ({
               />
             )}
 
+            {categories.length > 0 && (
+              <>
+                <label htmlFor="" className="form-label">
+                  Filtrar por categoria:
+                </label>
+                <Select
+                  value={categoryFilter}
+                  isClearable
+                  placeholder="Selecione a categoria..."
+                  classNamePrefix="select"
+                  className="mb-4"
+                  options={categories}
+                  onChange={(newValue: any) => {
+                    setCategoryFilter(newValue);
+                  }}
+                />
+                <hr className="mb-5" />
+              </>
+            )}
+
             {posts?.length > 0 ? (
               <div className="mb-4">
                 <div className="table-responsive border-0 overflow-y-hidden">
-                  {hasMultipleLanguages() ? (
-                    <Table
-                      columns={columns}
-                      data={posts.filter(
-                        (post: any) =>
-                          post.lang.toLowerCase() == language.toLowerCase()
-                      )}
-                    />
-                  ) : (
-                    <Table
-                      columns={columns}
-                      data={posts}
-                      asConsultantRegister={asConsultantRegister}
-                    />
-                  )}
+                  <Table
+                    columns={columns}
+                    data={getTableData()}
+                    asConsultantRegister={asConsultantRegister}
+                  />
                 </div>
               </div>
             ) : !posts && !error ? (
@@ -470,14 +508,14 @@ const PostType = ({
       </div>
 
       <ModalAddPost
-        show={show}
+        show={showModal}
         post={post}
         fields={fields}
         setPost={setPost}
         insertTitle={insertTitle}
         editTitle={editTitle}
-        onClose={onClose}
-        onConfirm={onConfirm}
+        onClose={closeModal}
+        onConfirm={saveModalData}
       />
     </>
   );
