@@ -7,6 +7,7 @@ import axios, { AxiosResponse } from "axios";
 import { ColumnFn } from "models/ColumnFn";
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
+import TrashButton from "@components/Utils/Buttons/TrashButton";
 
 interface User {
   activatedAt?: string;
@@ -48,7 +49,14 @@ export default function RegistroDeConsultores() {
   const [csvData, setCsvData] = useState("");
 
   const colunas =
-    ({ onUpdate, onRemove, getPost, onStatusChange, reloadData }: ColumnFn) =>
+    ({
+      onUpdate,
+      onRemove,
+      getPost,
+      onStatusChange,
+      reloadData,
+      onTrash,
+    }: ColumnFn) =>
     () =>
       [
         {
@@ -83,6 +91,22 @@ export default function RegistroDeConsultores() {
           Header: "Custo TMF",
           accessor: "registered.tmf_cost",
           Filter: NoFilter,
+        },
+        {
+          Header: "",
+          accessor: "id",
+          Filter: NoFilter,
+          Cell: ({ value = "" }) => {
+            return (
+              <div className="text-end d-flex">
+                <TrashButton
+                  onClick={async () => {
+                    onTrash(value);
+                  }}
+                />
+              </div>
+            );
+          },
         },
       ];
 
