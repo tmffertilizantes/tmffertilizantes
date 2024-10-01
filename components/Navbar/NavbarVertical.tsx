@@ -1,8 +1,8 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import Logo from '@components/Logo';
-import NavLinkCollapse from '@components/Navbar/NavLinkCollapse';
-import { logout } from '@context/user';
+import Logo from "@components/Logo";
+import NavLinkCollapse from "@components/Navbar/NavLinkCollapse";
+import { logout } from "@context/user";
 
 export default function NavBar() {
   return (
@@ -21,6 +21,22 @@ export default function NavBar() {
                 <i className="nav-icon fe fe-pie-chart me-2"></i>Análises
               </a>
             </Link>
+          </li>
+
+          <li className="nav-item">
+            <a className="nav-link" href="/nutricao-de-plantas">
+              <i className="nav-icon fe fe-droplet me-2"></i>Nutrição de Plantas
+            </a>
+          </li>
+
+          <li className="nav-item">
+            <a
+              className="nav-link"
+              href="/construcao-e-manutencao-de-perfil-de-solo"
+            >
+              <i className="nav-icon fe fe-layers me-2"></i>Construção e
+              manutenção de perfil de solo
+            </a>
           </li>
 
           <li className="nav-item">
