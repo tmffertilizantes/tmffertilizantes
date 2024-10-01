@@ -20,6 +20,7 @@ import {
   AlertItemEdited,
   AlertItemRemoved,
   AlertError,
+  AlertUserRemoved,
 } from "@components/Alerts/Alerts";
 import SelectLanguage from "@components/Utils/SelectLanguage";
 import StatusButton from "@components/Utils/Buttons/StatusButton";
@@ -30,6 +31,7 @@ interface DefaultColumnsFn {
   onUpdate: Function;
   onRemove: Function;
   onStatusChange: Function;
+  onTrash: Function;
   getPost: Function;
   reloadData: Function;
 }
@@ -43,6 +45,13 @@ interface DefaultFieldForm {
   errorMessage: string;
   post: any;
   disableEdit?: boolean;
+}
+
+interface ModalTrashPost {
+  show: boolean;
+  post: any;
+  onClose: () => void;
+  onConfirm: () => void;
 }
 
 interface ModalAddPost {
@@ -127,7 +136,13 @@ const defaultRemoveFn = async (
 };
 
 const defaultColumnsFn =
-  ({ onUpdate, onRemove, getPost, onStatusChange }: DefaultColumnsFn) =>
+  ({
+    onUpdate,
+    onTrash,
+    onRemove,
+    getPost,
+    onStatusChange,
+  }: DefaultColumnsFn) =>
   () =>
     [
       {
@@ -252,6 +267,7 @@ const PostType = ({
   const isDefaultPostDataStarted = useRef(false);
 
   const [showModal, setShowModal] = useState(false);
+  const [showTrashModal, setShowTrashModal] = useState(false);
   const [post, setPost] = useState<any>({});
   const [language, setLanguage] = useState<string>("pt-BR");
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter | null>(
@@ -282,6 +298,11 @@ const PostType = ({
     fetcherFn(fetcherDataFn, ...data)
   );
 
+  const closeTrashModal = () => {
+    setShowTrashModal(false);
+    setPost({});
+  };
+
   const closeModal = () => {
     setShowModal(false);
     setPost({});
@@ -298,6 +319,14 @@ const PostType = ({
     (id: any) => {
       setPost(posts.find((post: { id: any }) => post.id === id));
       setShowModal(true);
+    },
+    [posts]
+  );
+
+  const onTrash = useCallback(
+    (id: any) => {
+      setPost(posts.find((post: { id: any }) => post.id === id));
+      setShowTrashModal(true);
     },
     [posts]
   );
@@ -344,6 +373,27 @@ const PostType = ({
     mutate([url, options]);
   };
 
+  const sendUserToTrash = async () => {
+    const options = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const result = await axios.delete(
+      `${process.env.API_URL}/consultant/soft/${post.id}`,
+      options
+    );
+
+    if (result.status === 200) {
+      AlertUserRemoved();
+      reloadData();
+      closeTrashModal();
+    } else {
+      AlertError();
+    }
+  };
+
   const saveModalData = () => {
     const config = { rollbackOnError: true, optimisticData: [{}] };
 
@@ -373,8 +423,23 @@ const PostType = ({
   };
 
   const columns: any = useMemo(
-    columnsFn({ onUpdate, onRemove, onStatusChange, getPost, reloadData }),
-    [onUpdate, onRemove, getPost, onStatusChange, reloadData, columnsFn]
+    columnsFn({
+      onUpdate,
+      onTrash,
+      onRemove,
+      onStatusChange,
+      getPost,
+      reloadData,
+    }),
+    [
+      onUpdate,
+      onTrash,
+      onRemove,
+      getPost,
+      onStatusChange,
+      reloadData,
+      columnsFn,
+    ]
   );
 
   function hasMultipleLanguages() {
@@ -517,7 +582,47 @@ const PostType = ({
         onClose={closeModal}
         onConfirm={saveModalData}
       />
+
+      <ModalTrashUser
+        show={showTrashModal}
+        post={post}
+        onClose={closeTrashModal}
+        onConfirm={sendUserToTrash}
+      />
     </>
+  );
+};
+
+const ModalTrashUser = ({ onConfirm, onClose, show, post }: ModalTrashPost) => {
+  return (
+    <Modal
+      show={show}
+      onHide={onClose}
+      style={{ backgroundColor: "rgba(0,0,0,0.3)" }}
+      animation={false}
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>
+          Tem certeza que deseja excluir <br /> <b>{post?.user?.name}</b>?
+        </Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body className="text-center">
+        <div className="d-flex gap-3 mt-4 justify-content-center">
+          <button
+            className="btn btn-outline-primary btn-sm"
+            onClick={onConfirm}
+          >
+            Sim
+          </button>
+
+          <button className="btn btn-outline-danger btn-sm" onClick={onClose}>
+            Não
+          </button>
+        </div>
+      </Modal.Body>
+    </Modal>
   );
 };
 
