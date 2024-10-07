@@ -1,4 +1,8 @@
-import { AlertError, AlertItemEdited } from "@components/Alerts/Alerts";
+import {
+  AlertError,
+  AlertItemEdited,
+  AlertUserRemoved,
+} from "@components/Alerts/Alerts";
 import LayoutDefault from "@components/Layouts/default";
 import { PostType } from "@components/postType";
 import {
@@ -19,6 +23,7 @@ import { Form } from "react-bootstrap";
 import Select from "react-select";
 import useSWR from "swr";
 import { Modal } from "react-bootstrap";
+import TrashButton from "@components/Utils/Buttons/TrashButton";
 
 interface CustomComponent {
   post: any;
@@ -553,7 +558,14 @@ export default function Consultores() {
   }));
 
   const colunas =
-    ({ onUpdate, onRemove, getPost, onStatusChange, reloadData }: ColumnFn) =>
+    ({
+      onUpdate,
+      onRemove,
+      onTrash,
+      getPost,
+      onStatusChange,
+      reloadData,
+    }: ColumnFn) =>
     () =>
       [
         {
@@ -634,6 +646,12 @@ export default function Consultores() {
                     }}
                   />
                 )}
+
+                <TrashButton
+                  onClick={async () => {
+                    onTrash(value);
+                  }}
+                />
               </div>
             );
           },
@@ -659,13 +677,15 @@ export default function Consultores() {
             var consultant_list: any[] = [];
 
             var data_for_csv = consultant.map((consultant: any) => {
-              consultant_list.push({
-                ...consultant,
-                user_status:
-                  consultant.user.status == "approved"
-                    ? "Aprovado"
-                    : "Reprovado",
-              });
+              if (consultant.deletedAt === null) {
+                consultant_list.push({
+                  ...consultant,
+                  user_status:
+                    consultant.user.status == "approved"
+                      ? "Aprovado"
+                      : "Reprovado",
+                });
+              }
 
               return {
                 id: consultant.id,
