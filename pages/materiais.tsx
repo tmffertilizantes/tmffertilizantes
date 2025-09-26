@@ -27,6 +27,24 @@ const fetcherCategories = (url = "", token = "") =>
     })
     .then((res) => res.data.categories);
 
+const fetcherCultures = (url = "", token = "") =>
+  axios
+    .get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => res.data.cultures);
+
+const fetcherStates = (url = "", token = "") =>
+  axios
+    .get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => res.data.states);
+
 const Page: NextPage = () => {
   const { token = "" } = useGlobal();
   const url = `${process.env.API_URL}/material`;
@@ -145,6 +163,64 @@ const Page: NextPage = () => {
     },
     {
       Component: ({ post, setPost }: CustomComponent) => (
+        <div>
+          <label className="form-label">Cultura</label>
+          <Select
+            value={cultures_as_options.find(
+              (culture: any) => culture.value === post.cultureId
+            )}
+            placeholder="Selecione uma cultura..."
+            classNamePrefix="select"
+            className="mb-4"
+            options={cultures_as_options}
+            onChange={(newValue: any) => {
+              setPost({
+                ...post,
+                cultureId: newValue.value,
+              });
+            }}
+          />
+        </div>
+      ),
+    },
+    {
+      Component: ({ post, setPost }: CustomComponent) => (
+        <div>
+          <label className="form-label">Estado</label>
+
+          <Select
+            value={states_as_options.find(
+              (state: any) => state.value === post.stateId
+            )}
+            placeholder="Selecione um estado..."
+            classNamePrefix="select"
+            className="mb-4"
+            options={states_as_options}
+            onChange={(newValue: any) => {
+              setPost({
+                ...post,
+                stateId: newValue.value,
+              });
+            }}
+          />
+        </div>
+      ),
+    },
+    {
+      field: "year",
+      label: "Ano do material",
+      placeholder: "Exemplo: 2026",
+      type: 'text',
+      customEvents: (setCategoria: (arg0: (categoria: any) => any) => any) => ({
+        onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+          setCategoria((categoria) => ({
+            ...categoria,
+            year: Number(e.target.value.replace(/[^0-9]/g, "")),
+          })),
+      }),
+    },
+    {
+      Component: ({ post, setPost }: CustomComponent) => (
         <SelectLanguage
           className="mb-4"
           value={post.lang ? post.lang : language}
@@ -159,52 +235,63 @@ const Page: NextPage = () => {
 
   const colunas =
     ({ onUpdate, onRemove, getPost, onStatusChange, reloadData }: ColumnFn) =>
-    () =>
-      [
-        {
-          Header: "Nome",
-          accessor: "name",
-        },
-        {
-          Header: "Criado Em",
-          accessor: "createdAt",
-          Filter: DateColumnFilter,
-          filter: "dateBetween",
-          Cell: ({ value = new Date() }) => (
-            <span>{new Date(value).toLocaleDateString()}</span>
-          ),
-        },
-        {
-          Header: "",
-          accessor: "id",
-          Filter: NoFilter,
-          Cell: ({ value = "" }) => {
-            const currentPost = getPost(value);
-
-            return (
-              <div className="text-end d-flex justify-content-end">
-                <EditButton
-                  className="me-2"
-                  onClick={() => {
-                    onUpdate(value);
-                  }}
-                />
-                {currentPost && (
-                  <StatusButton
-                    className="me-2"
-                    active={currentPost["active"]}
-                    onClick={() => onStatusChange(value, currentPost["active"])}
-                  />
-                )}
-                <RemoveButton onClick={() => onRemove(value)} />
-              </div>
-            );
+      () =>
+        [
+          {
+            Header: "Nome",
+            accessor: "name",
           },
-        },
-      ];
+          {
+            Header: "Criado Em",
+            accessor: "createdAt",
+            Filter: DateColumnFilter,
+            filter: "dateBetween",
+            Cell: ({ value = new Date() }) => (
+              <span>{new Date(value).toLocaleDateString()}</span>
+            ),
+          },
+          {
+            Header: "",
+            accessor: "id",
+            Filter: NoFilter,
+            Cell: ({ value = "" }) => {
+              const currentPost = getPost(value);
+
+              return (
+                <div className="text-end d-flex justify-content-end">
+                  <EditButton
+                    className="me-2"
+                    onClick={() => {
+                      onUpdate(value);
+                    }}
+                  />
+                  {currentPost && (
+                    <StatusButton
+                      className="me-2"
+                      active={currentPost["active"]}
+                      onClick={() => onStatusChange(value, currentPost["active"])}
+                    />
+                  )}
+                  <RemoveButton onClick={() => onRemove(value)} />
+                </div>
+              );
+            },
+          },
+        ];
+
   const { data: categories, error } = useSWR(
     [`${process.env.API_URL}/materialCategory`, token],
     fetcherCategories
+  );
+
+  const { data: cultures } = useSWR(
+    [`${process.env.API_URL}/culture`, token],
+    fetcherCultures
+  );
+
+  const { data: states } = useSWR(
+    [`${process.env.API_URL}/state`, token],
+    fetcherStates
   );
 
   const categories_as_options = useMemo(
@@ -215,6 +302,25 @@ const Page: NextPage = () => {
       })) || [],
     [categories]
   );
+
+  const cultures_as_options = useMemo(
+    () =>
+      cultures?.map((culture: { id: any; name: any }) => ({
+        value: culture.id,
+        label: culture.name,
+      })) || [],
+    [cultures]
+  );
+
+  const states_as_options = useMemo(
+    () =>
+      states?.map((state: { id: any; name: any }) => ({
+        value: state.id,
+        label: state.name,
+      })) || [],
+    [states]
+  );
+
 
   const initialData = useMemo(() => {
     let data = null;

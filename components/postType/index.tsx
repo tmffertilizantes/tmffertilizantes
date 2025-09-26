@@ -1,19 +1,14 @@
-import { NextPage } from "next";
-import _ from "lodash";
 import {
   useMemo,
   useState,
-  useCallback,
-  ChangeEvent,
-  useEffect,
-  useRef,
+  useCallback, useEffect,
+  useRef
 } from "react";
-import useSWR, { mutate, useSWRConfig } from "swr";
-import axios, { AxiosResponse } from "axios";
+import useSWR, { useSWRConfig } from "swr";
+import axios from "axios";
 
 import { Table, NoFilter, DateColumnFilter } from "@components";
-import { Dropdown, Modal, Spinner } from "react-bootstrap";
-import RemoveButton from "@components/Utils/Buttons/RemoveButton";
+import { Modal, Spinner } from "react-bootstrap";
 import EditButton from "@components/Utils/Buttons/EditButton";
 import {
   AlertItemCreated,
@@ -143,56 +138,56 @@ const defaultColumnsFn =
     getPost,
     onStatusChange,
   }: DefaultColumnsFn) =>
-  () =>
-    [
-      {
-        Header: "Nome",
-        accessor: "name",
-        sortType: "basic",
-      },
-      {
-        Header: "Criado Em",
-        accessor: "createdAt",
-        Filter: DateColumnFilter,
-        filter: "dateBetween",
-        Cell: ({ value = new Date() }) => (
-          <span>{new Date(value).toLocaleDateString()}</span>
-        ),
-      },
-      {
-        Header: "",
-        accessor: "id",
-        Filter: NoFilter,
-        Cell: ({ value = "" }) => {
-          const currentPost = getPost(value);
-
-          if (!currentPost) {
-            return;
-          }
-
-          if (!currentPost.hasOwnProperty("active")) {
-            currentPost["active"] = false;
-          }
-
-          if (currentPost["active"] == null) {
-            currentPost["active"] = false;
-          }
-
-          return (
-            <div className="text-end">
-              <EditButton className="me-2" onClick={() => onUpdate(value)} />
-
-              <StatusButton
-                active={currentPost["active"]}
-                onClick={() => onStatusChange(value, currentPost["active"])}
-              />
-
-              {/* <RemoveButton onClick={() => onRemove(value)} /> */}
-            </div>
-          );
+    () =>
+      [
+        {
+          Header: "Nome",
+          accessor: "name",
+          sortType: "basic",
         },
-      },
-    ];
+        {
+          Header: "Criado Em",
+          accessor: "createdAt",
+          Filter: DateColumnFilter,
+          filter: "dateBetween",
+          Cell: ({ value = new Date() }) => (
+            <span>{new Date(value).toLocaleDateString()}</span>
+          ),
+        },
+        {
+          Header: "",
+          accessor: "id",
+          Filter: NoFilter,
+          Cell: ({ value = "" }) => {
+            const currentPost = getPost(value);
+
+            if (!currentPost) {
+              return;
+            }
+
+            if (!currentPost.hasOwnProperty("active")) {
+              currentPost["active"] = false;
+            }
+
+            if (currentPost["active"] == null) {
+              currentPost["active"] = false;
+            }
+
+            return (
+              <div className="text-end">
+                <EditButton className="me-2" onClick={() => onUpdate(value)} />
+
+                <StatusButton
+                  active={currentPost["active"]}
+                  onClick={() => onStatusChange(value, currentPost["active"])}
+                />
+
+                {/* <RemoveButton onClick={() => onRemove(value)} /> */}
+              </div>
+            );
+          },
+        },
+      ];
 
 const defaultFieldForm = ({
   label,
@@ -414,7 +409,7 @@ const PostType = ({
       }
       mutate(
         [url, options],
-        insertFn(insertUrlFn(url), url, options, post, fetcherDataFn),
+        insertFn(insertUrlFn(url), url, options, { ...post, lang: post.lang || 'pt-BR' }, fetcherDataFn),
         config
       );
     }
