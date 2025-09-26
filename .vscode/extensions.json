@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "editorconfig.editorconfig",
+    "biomejs.biome",
+    "shardulm94.trailing-spaces",
+    "vitest.explorer",
+  ]
+}

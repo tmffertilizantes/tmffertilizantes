@@ -5,6 +5,7 @@ import { AxiosResponse } from "axios";
 import LayoutDefault from "@components/Layouts/default";
 import SelectLanguage from "@components/Utils/SelectLanguage";
 import { useMemo, useState } from "react";
+import { Form } from "react-bootstrap";
 
 interface CustomComponent {
   post: any;
@@ -46,6 +47,28 @@ const Page: NextPage = () => {
         />
       ),
     },
+    {
+      Component: ({ post, setPost }: CustomComponent) => (
+        <div className="mb-3">
+          <label className="form-label">Categorias com filtros</label>
+          <Form.Check
+            type="switch"
+            id="custom-switch"
+            checked={post.filters}
+            onChange={(event) => {
+              var filters = false;
+              if (event.target.checked) {
+                filters = true;
+              }
+              setPost({
+                ...post,
+                filters: filters,
+              });
+            }}
+          />
+        </div>
+      ),
+    }
   ];
 
   const initialData = useMemo(() => {

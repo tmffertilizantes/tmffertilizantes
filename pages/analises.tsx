@@ -4,14 +4,10 @@ import { useGlobal } from "@context/global";
 import axios, { AxiosResponse } from "axios";
 import LayoutDefault from "@components/Layouts/default";
 import { ColumnFn } from "models/ColumnFn";
-import useSWR from "swr";
-import Select from "react-select";
 import ModalExibirPost from "@components/postType/ModalExibirPost";
 import ShowButton from "@components/Utils/Buttons/ShowButton";
 import { useState } from "react";
-import RemoveButton from "@components/Utils/Buttons/RemoveButton";
 import { Col, Row, Spinner, Table } from "react-bootstrap";
-import { Cidade } from "models/cidade";
 import { AlertError } from "@components/Alerts/Alerts";
 import { getUserLocation } from "@context/user";
 import StatusButton from "@components/Utils/Buttons/StatusButton";
@@ -131,10 +127,10 @@ const Page: NextPage = () => {
                       let new_current_post = await getPost(value);
 
                       // pega a cidade e o estado do consultor
-                      if (new_current_post.consultant.user.stateId) {
+                      if (new_current_post.consultant?.user.stateId) {
                         const consultant_location = await getUserLocation(
-                          new_current_post.consultant.user.stateId,
-                          new_current_post.consultant.user.cityId
+                          new_current_post.consultant?.user.stateId,
+                          new_current_post.consultant?.user.cityId
                         );
 
                         new_current_post = {
@@ -237,6 +233,8 @@ const Page: NextPage = () => {
               )
               .then(fetcherDataFn),
           fetcherDataFn: async (response: AxiosResponse) => {
+            try {
+
             const analises_raw = response.data.analysiss;
 
             const producers_raw = await axios.get(
@@ -515,10 +513,10 @@ const Page: NextPage = () => {
                 Ativo: analise.active,
                 "Tipo de Análise": analise.tipo_aplicacao,
 
-                "Nome do Consultor": analise.consultant.user.name ?? "",
-                "Email do Consultor": analise.consultant.user.email ?? "",
-                "Cidade do Consultor": analise.consultant.user.city.name ?? "",
-                "Estado do Consultor": analise.consultant.user.state.name ?? "",
+                "Nome do Consultor": analise.consultant?.user.name ?? "",
+                "Email do Consultor": analise.consultant?.user.email ?? "",
+                "Cidade do Consultor": analise.consultant?.user.city.name ?? "",
+                "Estado do Consultor": analise.consultant?.user.state.name ?? "",
 
                 "Nome do Produtor": analise.producer.name ?? "",
                 "Email do Produtor": analise.producer.email ?? "",
@@ -627,6 +625,9 @@ const Page: NextPage = () => {
             setCsvData(data_for_csv);
 
             return analises;
+          } catch (err) {
+            console.log(err)
+          }
           },
         }}
         tableConfig={{
@@ -661,12 +662,12 @@ const Page: NextPage = () => {
                   <Col>
                     <section>
                       <h4>Dados do consultor</h4>
-                      <div>Nome: {currentPost.consultant.user.name}</div>
-                      <div>Email: {currentPost.consultant.user.email}</div>
+                      <div>Nome: {currentPost.consultant?.user.name}</div>
+                      <div>Email: {currentPost.consultant?.user.email}</div>
                       <div>
-                        CPF: {currentPost.consultant.user.identification}
+                        CPF: {currentPost.consultant?.user.identification}
                       </div>
-                      <div>Telefone: {currentPost.consultant.user.phone}</div>
+                      <div>Telefone: {currentPost.consultant?.user.phone}</div>
                       <div>
                         Cidade:{" "}
                         {currentPost.consultant_location

@@ -1,0 +1,30 @@
+name: Security Analysis
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  sast:
+    name: SAST Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: SAST with Bearer CLI
+        uses: bearer/bearer-action@v2
+        with:
+          scanner: sast
+
+  secrets:
+    name: Secrets Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Security with Bearer CLI
+        uses: bearer/bearer-action@v2
+        with:
+          scanner: secrets
