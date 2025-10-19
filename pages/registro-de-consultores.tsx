@@ -5,7 +5,7 @@ import { NoFilter } from "@components";
 import { useGlobal } from "@context/global";
 import axios, { AxiosResponse } from "axios";
 import { ColumnFn } from "models/ColumnFn";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Modal } from "react-bootstrap";
 import TrashButton from "@components/Utils/Buttons/TrashButton";
 
@@ -57,58 +57,58 @@ export default function RegistroDeConsultores() {
       reloadData,
       onTrash,
     }: ColumnFn) =>
-    () =>
-      [
-        {
-          Header: "Nome",
-          accessor: "name",
-        },
-        {
-          Header: "Revenda",
-          accessor: "resale",
-        },
-        {
-          Header: "Produtores",
-          accessor: "registered.producers",
-          Filter: NoFilter,
-        },
-        {
-          Header: "Nutrição de Plantas",
-          accessor: "registered.plant_nutrition",
-          Filter: NoFilter,
-        },
-        {
-          Header: "Construção de Solo",
-          accessor: "registered.solo_construct",
-          Filter: NoFilter,
-        },
-        {
-          Header: "Custo de Produção",
-          accessor: "registered.production_cost",
-          Filter: NoFilter,
-        },
-        {
-          Header: "Custo TMF",
-          accessor: "registered.tmf_cost",
-          Filter: NoFilter,
-        },
-        {
-          Header: "",
-          accessor: "id",
-          Filter: NoFilter,
-          Cell: ({ value = "" }) => {
-            return (
-              <div className="text-end d-flex">
-                <TrashButton
-                  onClick={async () => {
-                    onTrash(value);
-                  }}
-                />
-              </div>
-            );
+      () =>
+        [
+          {
+            Header: "Nome",
+            accessor: "name",
           },
-        },
-      ];
+          {
+            Header: "Revenda",
+            accessor: "resale",
+          },
+          {
+            Header: "Produtores",
+            accessor: "registered.producers",
+            Filter: NoFilter,
+          },
+          {
+            Header: "Manutenção e nutrição de plantas",
+            accessor: "registered.plant_nutrition",
+            Filter: NoFilter,
+          },
+          {
+            Header: "Construção de Solo",
+            accessor: "registered.solo_construct",
+            Filter: NoFilter,
+          },
+          {
+            Header: "Custo de Produção",
+            accessor: "registered.production_cost",
+            Filter: NoFilter,
+          },
+          {
+            Header: "Custo TMF",
+            accessor: "registered.tmf_cost",
+            Filter: NoFilter,
+          },
+          {
+            Header: "",
+            accessor: "id",
+            Filter: NoFilter,
+            Cell: ({ value = "" }) => {
+              return (
+                <div className="text-end d-flex">
+                  <TrashButton
+                    onClick={async () => {
+                      onTrash(value);
+                    }}
+                  />
+                </div>
+              );
+            },
+          },
+        ];
 
   function getTodayDate() {
     var currentDate = new Date();
@@ -131,9 +131,8 @@ export default function RegistroDeConsultores() {
   return (
     <LayoutDefault>
       <PostType
-        queryParams={`?start_date=${startDate ?? "2000-01-01"}&end_date=${
-          endDate ?? getTodayDate()
-        }`}
+        queryParams={`?start_date=${startDate ?? "2000-01-01"}&end_date=${endDate ?? getTodayDate()
+          }`}
         clickDateButton={() => setShowModalFilter(true)}
         removeAddButton
         exportConsultantRegistrationButton
@@ -143,15 +142,13 @@ export default function RegistroDeConsultores() {
           token,
           fetcherFn: (
             fetcherDataFn = () => {},
-            url = `${process.env.API_URL}/consultant/report?start_date=${
-              startDate ?? "2000-01-01"
-            }&end_date=${endDate ?? getTodayDate()}`,
+            url = `${process.env.API_URL}/consultant/report?start_date=${startDate ?? "2000-01-01"
+              }&end_date=${endDate ?? getTodayDate()}`,
             options = {}
           ) =>
             axios
               .get(
-                `${process.env.API_URL}/consultant/report?start_date=${
-                  startDate ?? "2000-01-01"
+                `${process.env.API_URL}/consultant/report?start_date=${startDate ?? "2000-01-01"
                 }&end_date=${endDate ?? getTodayDate()}`,
                 options
               )
@@ -166,7 +163,7 @@ export default function RegistroDeConsultores() {
                 Revenda: consultant.resale ?? "",
 
                 Produtores: consultant.registered.producers,
-                "Nutrição de Plantas": consultant.registered.plant_nutrition,
+                "Manutenção e nutrição de plantas": consultant.registered.plant_nutrition,
                 "Construção de Solo": consultant.registered.solo_construct,
                 "Custo de Produção": consultant.registered.production_cost,
                 "Custo TMF": consultant.registered.tmf_cost,
