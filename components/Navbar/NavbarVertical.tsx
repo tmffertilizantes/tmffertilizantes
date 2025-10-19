@@ -25,7 +25,7 @@ export default function NavBar() {
 
           <li className="nav-item">
             <a className="nav-link" href="/nutricao-de-plantas">
-              <i className="nav-icon fe fe-droplet me-2"></i>Nutrição de Plantas
+              <i className="nav-icon fe fe-droplet me-2"></i>Manutenção e nutrição de plantas
             </a>
           </li>
 
@@ -34,8 +34,9 @@ export default function NavBar() {
               className="nav-link"
               href="/construcao-e-manutencao-de-perfil-de-solo"
             >
-              <i className="nav-icon fe fe-layers me-2"></i>Construção e
-              manutenção de perfil de solo
+              <i className="nav-icon fe fe-layers me-2"></i>
+              Fertilidade e
+              construção de perfil de solo
             </a>
           </li>
 
