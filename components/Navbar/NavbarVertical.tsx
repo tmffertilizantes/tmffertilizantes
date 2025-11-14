@@ -74,7 +74,15 @@ export default function NavBar() {
             </NavLinkCollapse>
           </li>
 
-          <li className="nav-item">
+           <li className="nav-item">
+            <Link href="/produtos">
+              <a className="nav-link">
+                <i className="nav-icon fe fe-book me-2"></i>Produtos
+              </a>
+            </Link>
+          </li>
+
+          {/* <li className="nav-item">
             <NavLinkCollapse
               title={"Produtos"}
               id={"produtos"}
@@ -94,7 +102,7 @@ export default function NavBar() {
                 </li>
               </ul>
             </NavLinkCollapse>
-          </li>
+          </li> */}
 
           <li className="nav-item">
             <Link href="/culturas">
