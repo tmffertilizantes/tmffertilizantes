@@ -258,6 +258,7 @@ const PostType = ({
   pageConfig: { pageTitle = "" } = {},
   categoryFilter: { categories = [] } = {},
   clickDateButton,
+  onCloseModal
 }: any) => {
   const isDefaultPostDataStarted = useRef(false);
 
@@ -301,6 +302,7 @@ const PostType = ({
   const closeModal = () => {
     setShowModal(false);
     setPost({});
+    onCloseModal && onCloseModal();
   };
 
   const getPost = useCallback(
@@ -409,7 +411,7 @@ const PostType = ({
       }
       mutate(
         [url, options],
-        insertFn(insertUrlFn(url), url, options, { ...post, lang: post.lang || 'pt-BR' }, fetcherDataFn),
+        insertFn(insertUrlFn(url), url, options, { ...post, lang: post?.lang || 'pt-BR' }, fetcherDataFn),
         config
       );
     }
@@ -450,7 +452,7 @@ const PostType = ({
 
     if (hasMultipleLanguages()) {
       table_data = table_data.filter(
-        (post: any) => post.lang.toLowerCase() == language.toLowerCase()
+        (post: any) => post?.lang.toLowerCase() == language.toLowerCase()
       );
     }
 
@@ -635,7 +637,7 @@ const ModalAddPost = ({
   const haveInvalidField = fields.find((field) => field.isValid === false);
 
   return (
-    <Modal show={show} onHide={onClose}>
+    <Modal show={show} onHide={onClose} size="xl">
       <Modal.Header closeButton>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>

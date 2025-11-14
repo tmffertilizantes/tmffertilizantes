@@ -9138,6 +9138,22 @@ textarea.form-control-lg {
   display: flex !important;
 }
 
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.color-primary {
+  color: #0a2814 !important;
+}
+
+.bg-primary {
+  background: #0a2814 !important;
+}
+
+.text-white {
+  color: #fff;
+}
+
 .d-inline-flex {
   display: inline-flex !important;
 }
