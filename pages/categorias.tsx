@@ -38,7 +38,7 @@ const Page: NextPage = () => {
       Component: ({ post, setPost }: CustomComponent) => (
         <SelectLanguage
           className="mb-4"
-          value={post.lang ? post.lang : language}
+          value={post?.lang ? post?.lang : language}
           onChange={(event) => {
             setLanguage(event.target.value);
             setPost({ ...post, lang: event.target.value });

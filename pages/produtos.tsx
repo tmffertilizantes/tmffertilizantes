@@ -8,7 +8,7 @@ import SelectLanguage from "@components/Utils/SelectLanguage";
 import { useGlobal } from "@context/global";
 import axios, { AxiosResponse } from "axios";
 import { ColumnFn } from "models/ColumnFn";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
 import useSWR from "swr";
 
@@ -31,6 +31,7 @@ export default function Produtos() {
   const url = `${process.env.API_URL}/product`;
 
   const [language, setLanguage] = useState("pt-br");
+  const [productImage, setProductImage] = useState<{b64?: string, name?: string}>({})
 
   const [csvData, setCsvData] = useState(null);
 
@@ -115,43 +116,184 @@ export default function Produtos() {
           })),
       }),
     },
+    // {
+    //   Component: ({ post, setPost }: CustomComponent) => (
+    //     <div>
+    //       <SelectLanguage
+    //         className="mb-4"
+    //         value={post?.lang ? post?.lang : language}
+    //         onChange={(event) => {
+    //           setLanguage(event.target.value);
+    //           setPost({ ...post, lang: event.target.value });
+    //         }}
+    //       />
+    //     </div>
+    //   ),
+    // },
     {
-      Component: ({ post, setPost }: CustomComponent) => (
-        <div>
-          <SelectLanguage
-            className="mb-4"
-            value={post.lang ? post.lang : language}
-            onChange={(event) => {
-              setLanguage(event.target.value);
-              setPost({ ...post, lang: event.target.value });
-            }}
-          />
-        </div>
-      ),
-    },
-    {
-      Component: ({ post, setPost }: CustomComponent) => (
-        <div>
-          <label className="form-label">Categoria</label>
+      Component: ({ post, setPost }: CustomComponent) => {
+        return (
+        <div style={{ border: '1px solid #ddd', padding: '10px', marginBottom: '5px'}}>
+          <div className="mb-3">
+            <label className="form-label" htmlFor="image">
+              Imagem do produto
+            </label>
 
-          <Select
-            value={categories_as_options.find(
-              (category: any) => category.value === post.categoryId
+            <div>
+              <span>Para melhor exibição das imagens no aplicativo:</span>
+              <ul>
+                <li>Utilize formato PNG com fundo transparente</li>
+                <li>Imagens leves</li>
+                <li>Imagens bem recortadas, sem excesso de altura/largura</li>
+              </ul>
+            </div>
+
+            {post?.image && (
+                <div className="d-flex flex-column mb-3">
+                  <span>Pré-visualização</span>
+                  <img style={{ width: '100px', marginTop: '10px'}} src={post?.image} />
+                </div>
             )}
-            placeholder="Selecione a categoria..."
-            classNamePrefix="select"
-            className="mb-4"
-            options={categories_as_options}
-            onChange={(newValue: any) => {
-              setPost({
-                ...post,
-                categoryId: newValue.value,
-              });
-            }}
-          />
+
+            {productImage?.name ? (
+              <div>
+                <span>{productImage.name}</span>
+                <button onClick={() => setProductImage({})} className="remove-file" style={{ borderRadius: '5px', marginLeft: '5px', background: '#', outline: 'none', border: 'none' }}>
+                  alterar imagem
+                </button>
+              </div>
+            ) : (
+             <input
+              onChange={(e) => handleFileB64(e, setPost)}
+              type="file"
+              accept="image/*"
+              id="image"
+              className="form-control"
+            />
+            )}
+
+          </div>
         </div>
-      ),
+      )
+      },
     },
+    {
+      Component: ({ post, setPost }: CustomComponent) => {
+        const [lang, setLang] = useState('pt');
+
+        return (
+        <div className="mb-3">
+          <label className="form-label" htmlFor="description">
+            Descrição do produto
+          </label>
+
+          <div className="d-flex gap-4 mb-2 ">
+            <span className={`block cursor-pointer p-1 ${lang==='pt' && 'bg-primary text-white'}`} onClick={() => setLang('pt')}>Português</span>
+            <span className={`block cursor-pointer p-1 ${lang==='en' && 'bg-primary text-white'}`} onClick={() => setLang('en')}>Inglês</span>
+            <span className={`block cursor-pointer p-1 ${lang==='es' && 'bg-primary text-white'}`} onClick={() => setLang('es')}>Espanhol</span>
+          </div>
+
+          {lang === 'pt' && (
+          <textarea
+            defaultValue={post?.description?.pt || ''}
+            onChange={(e) => setPost({ ...post, description: {...post.description, pt: e.target.value } })}
+            id="description"
+            className="form-control"
+            placeholder="[Português] Descrição do produto para exibição no aplicativo."
+          />
+          )}
+           {lang === 'en' && (
+          <textarea
+            defaultValue={post?.description?.en || ''}
+            onChange={(e) => setPost({ ...post, description: {...post.description, en: e.target.value } })}
+            id="description"
+            className="form-control"
+            placeholder="[Inglês] Descrição do produto para exibição no aplicativo."
+          />
+          )}
+           {lang === 'es' && (
+          <textarea
+            defaultValue={post?.description?.es || ''}
+            onChange={(e) => setPost({ ...post, description: {...post.description, es: e.target.value } })}
+            id="description"
+            className="form-control"
+            placeholder="[Espanhol] Descrição do produto para exibição no aplicativo."
+          />
+          )}
+        </div>
+      )
+      },
+    },
+    {
+      Component: ({ post, setPost }: CustomComponent) => {
+        const [lang, setLang] = useState('pt');
+
+        return (
+        <div className="mb-3">
+          <label className="form-label" htmlFor="guarantees">
+            Garantias do produto
+          </label>
+
+          <div className="d-flex gap-4 mb-2 ">
+            <span className={`block cursor-pointer p-1 ${lang==='pt' && 'bg-primary text-white'}`} onClick={() => setLang('pt')}>Português</span>
+            <span className={`block cursor-pointer p-1 ${lang==='en' && 'bg-primary text-white'}`} onClick={() => setLang('en')}>Inglês</span>
+            <span className={`block cursor-pointer p-1 ${lang==='es' && 'bg-primary text-white'}`} onClick={() => setLang('es')}>Espanhol</span>
+          </div>
+
+          {lang === 'pt' && (
+          <textarea
+            defaultValue={post?.guarantees?.pt || ''}
+            onChange={(e) => setPost({ ...post, guarantees: {...post.guarantees, pt: e.target.value } })}
+            id="guarantees"
+            className="form-control"
+            placeholder="[Português] Exemplo: Sacaria de 40kgs e Big Bag de 1T"
+          />
+          )}
+           {lang === 'en' && (
+          <textarea
+            defaultValue={post?.guarantees?.en || ''}
+            onChange={(e) => setPost({ ...post, guarantees: {...post.guarantees, en: e.target.value } })}
+            id="guarantees"
+            className="form-control"
+            placeholder="[Inglês] Exemplo: Sacaria de 40kgs e Big Bag de 1T"
+          />
+          )}
+           {lang === 'es' && (
+          <textarea
+            defaultValue={post?.guarantees?.es || ''}
+            onChange={(e) => setPost({ ...post, guarantees: {...post.guarantees, es: e.target.value } })}
+            id="guarantees"
+            className="form-control"
+            placeholder="[Espanhol] Exemplo: Sacaria de 40kgs e Big Bag de 1T"
+          />
+          )}
+        </div>
+      )
+      },
+    },
+    // {
+    //   Component: ({ post, setPost }: CustomComponent) => (
+    //     <div>
+    //       <label className="form-label">Categoria</label>
+
+    //       <Select
+    //         value={categories_as_options.find(
+    //           (category: any) => category.value === post.categoryId
+    //         )}
+    //         placeholder="Selecione a categoria..."
+    //         classNamePrefix="select"
+    //         className="mb-4"
+    //         options={categories_as_options}
+    //         onChange={(newValue: any) => {
+    //           setPost({
+    //             ...post,
+    //             categoryId: newValue.value,
+    //           });
+    //         }}
+    //       />
+    //     </div>
+    //   ),
+    // },
     {
       Component: ({ post, setPost }: CustomComponent) => (
         <div className="mb-3">
@@ -285,6 +427,19 @@ export default function Produtos() {
     },
   ];
 
+const handleFileB64 = (event: React.ChangeEvent<HTMLInputElement>, setPost: any) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  setProductImage(p => ({...p, name: file.name }));
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    const b64 = reader.result as string;
+    setProductImage(p => ({...p, b64 }));
+    setPost((p: any) => ({...p, image: b64 }))
+  };
+  reader.readAsDataURL(file);
+};
+
   const { data: categories, error } = useSWR(
     [`${process.env.API_URL}/category`, token],
     fetcherCategories
@@ -343,6 +498,11 @@ export default function Produtos() {
 
     data = {
       active: true,
+      description: {pt: '', en: '', es: ''},
+      guarantees: {pt: '', en: '', es: ''},
+      language: 'pt-BR',
+      lang: 'pt-BR',
+      image: productImage?.b64
     };
 
     if (categories_as_options && categories_as_options.length) {
@@ -352,21 +512,22 @@ export default function Produtos() {
       };
     }
 
-    if (language) {
-      data = {
-        ...data,
-        lang: language,
-      };
-    }
+    // if (language) {
+    //   data = {
+    //     ...data,
+    //     lang: language,
+    //   };
+    // }
 
     return data;
-  }, [categories_as_options]);
+  }, [categories_as_options, productImage?.b64]);
 
   return (
     <LayoutDefault>
       <PostType
         initialPostData={initialData}
         csvData={csvData}
+        onCloseModal={() => setProductImage({})}
         dataConfig={{
           url,
           token,
