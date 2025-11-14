@@ -440,7 +440,7 @@ const PostType = ({
   );
 
   function hasMultipleLanguages() {
-    if (initialPostData?.hasOwnProperty("lang")) {
+    if (initialPostData?.hasOwnProperty("lang") && !initialPostData?.hasOwnProperty('guarantees')) {
       return true;
     } else {
       return false;
