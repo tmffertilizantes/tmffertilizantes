@@ -264,12 +264,12 @@ const Page: NextPage = () => {
           columnsFn: colunas,
         }}
         pageConfig={{
-          pageTitle: "Custo TMF x Concorrente",
+          pageTitle: "Investimento TMF X Concorrente",
         }}
       />
 
       <ModalExibirPost
-        title="Custo TMF X Concorrente"
+        title="Investimento TMF X Concorrente"
         show={showModalExibir}
         onClose={onCloseModalExibir}
         size="lg"
@@ -288,7 +288,7 @@ const Page: NextPage = () => {
                 border: "none",
               }}
               sandbox="allow-same-origin allow-scripts allow-popups"
-              title="Custo TMF x Concorrente PDF"
+              title="Investimento TMF X Concorrente PDF"
             />
             // currentPost.user && (
             //   <div>
