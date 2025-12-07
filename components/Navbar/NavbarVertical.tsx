@@ -167,7 +167,7 @@ export default function NavBar() {
 
           <li className="nav-item">
             <a className="nav-link" href="/custo-tmf-calcario">
-              <i className="nav-icon fe fe-dollar-sign me-2"></i>Custo TMF x
+              <i className="nav-icon fe fe-dollar-sign me-2"></i>Investimento TMF x
               Concorrente
             </a>
           </li>

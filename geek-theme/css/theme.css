@@ -9150,6 +9150,10 @@ textarea.form-control-lg {
   background: #0a2814 !important;
 }
 
+.bg-danger {
+  background: e53f3c !important;
+}
+
 .text-white {
   color: #fff;
 }

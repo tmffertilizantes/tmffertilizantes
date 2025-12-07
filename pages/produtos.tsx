@@ -116,6 +116,37 @@ export default function Produtos() {
           })),
       }),
     },
+    {
+      Component: ({ post, setPost }: CustomComponent) => {
+        const [lang, setLang] = useState('pt');
+
+        console.log(post)
+
+        return (
+        <div className="mb-3">
+          <label className="form-label" htmlFor="guarantees">
+            Visibilidade no aplicativo
+          </label>
+
+          <div className="d-flex gap-4 mb-2 ">
+            <span className={`block cursor-pointer p-1 text-white rounded ${post.enabledOnNutrition ? 'bg-primary' : 'bg-danger'}`}
+              onClick={() => setPost({...post, enabledOnNutrition: !post?.enabledOnNutrition })}
+            >
+              {post.enabledOnNutrition ? '✓ ' : 'ⓧ '}
+              Manutenção e nutrição de plantas
+            </span>
+            <span className={`block cursor-pointer p-1 text-white rounded ${post.enabledOnFertility ? 'bg-primary' : 'bg-danger'}`}
+            onClick={() => setPost({...post, enabledOnFertility: !post?.enabledOnFertility })}
+            >
+              {post.enabledOnFertility ? '✓ ' : 'ⓧ '}
+              Fertilidade e construção de perfil de solo
+            </span>
+          </div>
+
+        </div>
+      )
+      },
+    },
     // {
     //   Component: ({ post, setPost }: CustomComponent) => (
     //     <div>
@@ -502,7 +533,9 @@ const handleFileB64 = (event: React.ChangeEvent<HTMLInputElement>, setPost: any)
       guarantees: {pt: '', en: '', es: ''},
       language: 'pt-BR',
       lang: 'pt-BR',
-      image: productImage?.b64
+      image: productImage?.b64,
+      enabledOnNutrition: true,
+      enabledOnFertility: true
     };
 
     if (categories_as_options && categories_as_options.length) {

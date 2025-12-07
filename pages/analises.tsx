@@ -175,7 +175,6 @@ const Page: NextPage = () => {
                         //     ...new_current_post,
                         //     pdf_url: pdf_url.data.pdfPathName,
                         //   };
-
                         setCurrentPost(new_current_post);
                       } catch (error) {
                         setShowModalExibir(false);
@@ -512,10 +511,10 @@ const Page: NextPage = () => {
                   Ativo: analise.active,
                   "Tipo de Análise": analise.tipo_aplicacao,
 
-                  "Nome do Consultor": analise.consultant?.user.name ?? "",
-                  "Email do Consultor": analise.consultant?.user.email ?? "",
-                  "Cidade do Consultor": analise.consultant?.user.city.name ?? "",
-                  "Estado do Consultor": analise.consultant?.user.state.name ?? "",
+                  "Nome do Consultor": analise.consultant?.user?.name ?? "",
+                  "Email do Consultor": analise.consultant?.user?.email ?? "",
+                  "Cidade do Consultor": analise.consultant?.user?.city?.name ?? "",
+                  "Estado do Consultor": analise.consultant?.user?.state?.name ?? "",
 
                   "Nome do Produtor": analise.producer.name ?? "",
                   "Email do Produtor": analise.producer.email ?? "",
