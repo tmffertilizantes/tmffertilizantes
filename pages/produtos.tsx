@@ -135,12 +135,12 @@ export default function Produtos() {
               {post.enabledOnNutrition ? '✓ ' : 'ⓧ '}
               Manutenção e nutrição de plantas
             </span>
-            <span className={`block cursor-pointer p-1 text-white rounded ${post.enabledOnFertility ? 'bg-primary' : 'bg-danger'}`}
+            {/* <span className={`block cursor-pointer p-1 text-white rounded ${post.enabledOnFertility ? 'bg-primary' : 'bg-danger'}`}
             onClick={() => setPost({...post, enabledOnFertility: !post?.enabledOnFertility })}
             >
               {post.enabledOnFertility ? '✓ ' : 'ⓧ '}
               Fertilidade e construção de perfil de solo
-            </span>
+            </span> */}
           </div>
 
         </div>
