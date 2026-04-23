@@ -413,6 +413,7 @@ export const Table = ({
                   {headerGroup.headers.map((column) => {
                     const { key, ...restColumnProps } = column.getHeaderProps();
                     return (
+                      // @ts-ignore
                       <th key={key} {...restColumnProps}>
                         {column.render("Header")}
                         <span>
