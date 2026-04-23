@@ -335,6 +335,7 @@ export const Table = ({
       initialState: {
         pageSize: defaultPageSize,
       },
+      // @ts-ignore
       defaultColumn,
       // @ts-ignore
       filterTypes,
