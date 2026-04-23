@@ -452,7 +452,7 @@ const PostType = ({
 
     if (hasMultipleLanguages()) {
       table_data = table_data.filter(
-        (post: any) => post?.lang.toLowerCase() == language.toLowerCase()
+        (post: any) => post?.lang?.toLowerCase() == language.toLowerCase()
       );
     }
 
