@@ -14,7 +14,7 @@ interface CustomComponent {
 
 export default function Nutrientes() {
   const { token = "" } = useGlobal();
-  const url = `${process.env.API_URL}/nutrients`;
+  const url = `${process.env.API_URL}/nutrient`;
 
   const fields = [
     {
