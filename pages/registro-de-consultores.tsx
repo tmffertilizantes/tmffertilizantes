@@ -66,6 +66,8 @@ export default function RegistroDeConsultores() {
           {
             Header: "Revenda",
             accessor: "resale",
+            Cell: ({ value }: { value: any }) =>
+              typeof value === "object" ? value?.name ?? "" : value ?? "",
           },
           {
             Header: "Produtores",
@@ -160,7 +162,7 @@ export default function RegistroDeConsultores() {
               return {
                 id: consultant.id,
                 Nome: consultant.name ?? "",
-                Revenda: consultant.resale ?? "",
+                Revenda: typeof consultant.resale === "object" ? consultant.resale?.name ?? "" : consultant.resale ?? "",
 
                 Produtores: consultant.registered.producers,
                 "Manutenção e nutrição de plantas": consultant.registered.plant_nutrition,

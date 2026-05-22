@@ -149,25 +149,20 @@ export function DateColumnFilter({
   column: { filterValue = [], preFilteredRows, setFilter, id },
 }: any) {
   const [min, max] = React.useMemo(() => {
-    let min: Date = new Date("2000-01-01");
-    let max: Date = new Date("2000-01-01");
+    let min: Date | null = null;
+    let max: Date | null = null;
 
-    if (preFilteredRows.length > 0) {
-      min = new Date(preFilteredRows[0].values[id]);
-      max = new Date(preFilteredRows[0].values[id]);
-
-      preFilteredRows.forEach(
-        (row: { values: { [x: string]: string | number | Date } }) => {
-          min =
-            new Date(row.values[id]) <= min ? new Date(row.values[id]) : min;
-          max =
-            new Date(row.values[id]) >= max ? new Date(row.values[id]) : max;
-        }
-      );
-    }
+    preFilteredRows.forEach(
+      (row: { values: { [x: string]: string | number | Date } }) => {
+        const d = new Date(row.values[id]);
+        if (isNaN(d.getTime())) return;
+        if (min === null || d <= min) min = d;
+        if (max === null || d >= max) max = d;
+      }
+    );
 
     return [min, max];
-  }, [id, preFilteredRows]);
+  }, [id, preFilteredRows]) as [Date | null, Date | null];
 
   if (preFilteredRows.length > 0) {
     return (
@@ -182,8 +177,8 @@ export function DateColumnFilter({
               <input
                 className="form-control-xs ps-5 py-1 input-light"
                 type="date"
-                min={min.toISOString().slice(0, 10)}
-                max={max.toISOString().slice(0, 10)}
+                min={min?.toISOString().slice(0, 10)}
+                max={max?.toISOString().slice(0, 10)}
                 value={filterValue[0] || ""}
                 onChange={(e) => {
                   const val = e.target.value;
@@ -206,8 +201,8 @@ export function DateColumnFilter({
               <input
                 className="form-control-xs ps-5 py-1 input-light"
                 type="date"
-                min={min.toISOString().slice(0, 10)}
-                max={max.toISOString().slice(0, 10)}
+                min={min ? min?.toISOString().slice(0, 10) : undefined}
+                max={max?.toISOString().slice(0, 10)}
                 value={filterValue[1] || ""}
                 onChange={(e) => {
                   const val = e.target.value;
