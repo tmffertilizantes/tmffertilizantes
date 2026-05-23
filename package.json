@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "volta": {
-    "node": "18.20.5",
+    "node": "20.19.0",
     "yarn": "4.13.0"
   },
   "dependencies": {
