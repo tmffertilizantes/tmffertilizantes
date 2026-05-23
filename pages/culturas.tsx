@@ -15,7 +15,7 @@ interface CustomComponent {
   setPost: Function;
 }
 
-const NUTRIENT_NAMES = ["Cálcio", "Magnésio", "Enxofre"];
+const NUTRIENT_NAMES = ["Boro", "Cálcio", "Enxofre", "Fósforo", "Magnésio", "Nitrogênio", "Potássio"];
 
 function NutrientRow({
   nutrient,
