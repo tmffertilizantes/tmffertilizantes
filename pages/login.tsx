@@ -117,7 +117,7 @@ export default function Login() {
               <div className="mb-4">
                 <Logo />
 
-                <h1 className="mb-1 fw-bold">Login</h1>
+                <h1 className="mb-1 fw-bold text-primary">Login</h1>
               </div>
 
               <form onSubmit={handleSubmit}>

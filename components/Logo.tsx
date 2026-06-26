@@ -13,5 +13,5 @@ export default function Logo(props: LogoProps) {
 		logo_src = "/logotmf_white.png"
 	}
 
-  return <Image src={logo_src} width={367} height={212} alt="Logo TMF" />;
+  return <Image src={logo_src} width={320} height={120} alt="Logo TMF" />;
 }

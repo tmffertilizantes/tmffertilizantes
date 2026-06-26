@@ -9,7 +9,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <GlobalContextProvider>
       <Head>
-        <title>CMS - TMF Fertilizantes</title>
+        <title>CMS -  Allterra Indica</title>
       </Head>
 
       <Component {...pageProps} />
