@@ -338,48 +338,54 @@ export default function Consultores() {
       ),
     },
     {
-      Component: ({ post, setPost }: CustomComponent) => (
-        <div className="mb-3">
-          <label className="form-label" htmlFor="formResale">
-            Revenda Informada pelo Usuário
-          </label>
+      Component: ({ post }: CustomComponent) => {
+        const resaleName =
+          resales_as_options?.find(
+            (resale: any) => String(resale.value) === String(post.formResale)
+          )?.label ?? "Não encontrado";
 
-          <input
-            value={post.formResale}
-            onChange={(e) =>
-              setPost({
-                ...post,
-                formResale: e.target.value,
-              })
-            }
-            type="text"
-            id="formResale"
-            className="form-control"
-          />
-        </div>
-      ),
+        return (
+          <div className="mb-3">
+            <label className="form-label" htmlFor="formResale">
+              Revenda Informada pelo Usuário
+            </label>
+
+            <input
+              value={resaleName}
+              disabled
+              readOnly
+              type="text"
+              id="formResale"
+              className="form-control"
+            />
+          </div>
+        );
+      },
     },
     {
-      Component: ({ post, setPost }: CustomComponent) => (
-        <div className="mb-3">
-          <label className="form-label" htmlFor="formRegion">
-            Região Informada pelo Usuário
-          </label>
+      Component: ({ post }: CustomComponent) => {
+        const regionName =
+          regions_as_options?.find(
+            (region: any) => String(region.value) === String(post.formRegion)
+          )?.label ?? "Não encontrado";
 
-          <input
-            value={post.formRegion}
-            onChange={(e) =>
-              setPost({
-                ...post,
-                formRegion: e.target.value,
-              })
-            }
-            type="text"
-            id="formRegion"
-            className="form-control"
-          />
-        </div>
-      ),
+        return (
+          <div className="mb-3">
+            <label className="form-label" htmlFor="formRegion">
+              Região Informada pelo Usuário
+            </label>
+
+            <input
+              value={regionName}
+              disabled
+              readOnly
+              type="text"
+              id="formRegion"
+              className="form-control"
+            />
+          </div>
+        );
+      },
     },
     {
       Component: ({ post, setPost }: CustomComponent) => (
