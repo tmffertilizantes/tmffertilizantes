@@ -617,9 +617,9 @@ export default function Consultores() {
                   }}
                 />
 
-                {currentPost && (
+                {currentPost && currentPost.user && (
                   <StatusButton
-                    active={currentPost.user["active"]}
+                    active={currentPost.user?.["active"]}
                     onClick={async () => {
                       const options = {
                         headers: {
