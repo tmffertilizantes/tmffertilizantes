@@ -2,12 +2,30 @@ import LayoutDefault from "@components/Layouts/default";
 import { useGlobal } from "@context/global";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Tabs, Tab, ListGroup, Button, Spinner } from "react-bootstrap";
+import { Tabs, Tab, Spinner, Form } from "react-bootstrap";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+  sortableKeyboardCoordinates,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface ResultSectionOrder {
   id: number;
   analysisType: "nutrition" | "fertility" | "tmfVsCompetitor" | "productionCost";
   sectionOrder: string[];
+  hiddenSections: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -52,6 +70,55 @@ const DEFAULT_ORDER_BY_TYPE: Record<ResultSectionOrder["analysisType"], string[]
   productionCost: ["comparisonHighlight", "comparisonDetail"],
 };
 
+function SortableSectionItem({
+  sectionKey,
+  isHidden,
+  onToggleHidden,
+}: {
+  sectionKey: string;
+  isHidden: boolean;
+  onToggleHidden: (key: string) => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: sectionKey,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`list-group-item d-flex justify-content-between align-items-center ${
+        isHidden ? "text-muted bg-light" : ""
+      }`}
+    >
+      <div className="d-flex align-items-center gap-3">
+        <span
+          {...attributes}
+          {...listeners}
+          className="fe fe-move"
+          style={{ cursor: "grab", fontSize: "1.1rem" }}
+          title="Arrastar para reordenar"
+        />
+        <span>{SECTION_LABELS[sectionKey] || sectionKey}</span>
+      </div>
+
+      <Form.Check
+        type="switch"
+        id={`toggle-${sectionKey}`}
+        label={isHidden ? "Oculta" : "Exibida"}
+        checked={!isHidden}
+        onChange={() => onToggleHidden(sectionKey)}
+      />
+    </div>
+  );
+}
+
 export default function PersonalizacaoResultados() {
   const { token = "" } = useGlobal();
   const url = `${process.env.API_URL}/resultSectionOrder`;
@@ -60,6 +127,11 @@ export default function PersonalizacaoResultados() {
   const [activeType, setActiveType] = useState<ResultSectionOrder["analysisType"]>("nutrition");
   const [isLoading, setLoading] = useState(true);
   const [isSaving, setSaving] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
 
   const axiosOptions = { headers: { Authorization: `Bearer ${token}` } };
 
@@ -77,25 +149,36 @@ export default function PersonalizacaoResultados() {
 
   const activeRow = rows.find((row) => row.analysisType === activeType);
 
-  function moveSection(index: number, direction: -1 | 1) {
+  function updateActiveRow(patch: Partial<ResultSectionOrder>) {
     if (!activeRow) return;
-    const newOrder = [...activeRow.sectionOrder];
-    const targetIndex = index + direction;
-    if (targetIndex < 0 || targetIndex >= newOrder.length) return;
-
-    [newOrder[index], newOrder[targetIndex]] = [newOrder[targetIndex], newOrder[index]];
-
     setRows((prev) =>
-      prev.map((row) => (row.id === activeRow.id ? { ...row, sectionOrder: newOrder } : row))
+      prev.map((row) => (row.id === activeRow.id ? { ...row, ...patch } : row))
     );
   }
 
-  async function saveOrder(sectionOrder: string[]) {
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!activeRow || !over || active.id === over.id) return;
+
+    const oldIndex = activeRow.sectionOrder.indexOf(String(active.id));
+    const newIndex = activeRow.sectionOrder.indexOf(String(over.id));
+    updateActiveRow({ sectionOrder: arrayMove(activeRow.sectionOrder, oldIndex, newIndex) });
+  }
+
+  function toggleHidden(sectionKey: string) {
+    if (!activeRow) return;
+    const hiddenSections = activeRow.hiddenSections.includes(sectionKey)
+      ? activeRow.hiddenSections.filter((key) => key !== sectionKey)
+      : [...activeRow.hiddenSections, sectionKey];
+    updateActiveRow({ hiddenSections });
+  }
+
+  async function saveOrder(sectionOrder: string[], hiddenSections: string[]) {
     if (!activeRow) return;
     setSaving(true);
     const response = await axios.patch(
       `${url}/${activeRow.id}`,
-      { sectionOrder },
+      { sectionOrder, hiddenSections },
       axiosOptions
     );
     const updated = response.data.resultSectionOrder;
@@ -105,75 +188,87 @@ export default function PersonalizacaoResultados() {
 
   function restoreDefault() {
     if (!activeRow) return;
-    saveOrder(DEFAULT_ORDER_BY_TYPE[activeRow.analysisType]);
+    saveOrder(DEFAULT_ORDER_BY_TYPE[activeRow.analysisType], []);
   }
 
   return (
     <LayoutDefault>
-      <h1 className="h3 mb-4">Personalização de Resultados</h1>
+      <div className="container-fluid p-4">
+        <div className="row">
+          <div className="col-lg-12 col-md-12 col-12">
+            <div className="border-bottom pb-4 mb-4 d-md-flex align-items-center justify-content-between">
+              <div>
+                <h1 className="mb-0">Personalização de Resultados</h1>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      {isLoading ? (
-        <Spinner animation="border" variant="primary" />
-      ) : (
-        <Tabs
-          activeKey={activeType}
-          onSelect={(key) => key && setActiveType(key as ResultSectionOrder["analysisType"])}
-          className="mb-3"
-        >
-          {(Object.keys(ANALYSIS_TYPE_LABELS) as ResultSectionOrder["analysisType"][]).map(
-            (type) => {
-              const row = rows.find((r) => r.analysisType === type);
+        <div className="row">
+          <div className="col-lg-12 col-md-12 col-12">
+            {isLoading ? (
+              <Spinner animation="border" variant="primary" />
+            ) : (
+              <Tabs
+                activeKey={activeType}
+                onSelect={(key) => key && setActiveType(key as ResultSectionOrder["analysisType"])}
+                className="mb-3"
+              >
+                {(Object.keys(ANALYSIS_TYPE_LABELS) as ResultSectionOrder["analysisType"][]).map(
+                  (type) => {
+                    const row = rows.find((r) => r.analysisType === type);
 
-              return (
-                <Tab eventKey={type} title={ANALYSIS_TYPE_LABELS[type]} key={type}>
-                  <ListGroup className="mt-3">
-                    {row?.sectionOrder.map((sectionKey, index) => (
-                      <ListGroup.Item
-                        key={sectionKey}
-                        className="d-flex justify-content-between align-items-center"
-                      >
-                        {SECTION_LABELS[sectionKey] || sectionKey}
-                        <div>
-                          <Button
-                            size="sm"
-                            variant="outline-secondary"
-                            className="me-2"
-                            disabled={index === 0}
-                            onClick={() => moveSection(index, -1)}
+                    return (
+                      <Tab eventKey={type} title={ANALYSIS_TYPE_LABELS[type]} key={type}>
+                        {row && (
+                          <DndContext
+                            sensors={sensors}
+                            collisionDetection={closestCenter}
+                            onDragEnd={handleDragEnd}
                           >
-                            ↑
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline-secondary"
-                            disabled={index === row.sectionOrder.length - 1}
-                            onClick={() => moveSection(index, 1)}
+                            <SortableContext
+                              items={row.sectionOrder}
+                              strategy={verticalListSortingStrategy}
+                            >
+                              <div className="list-group mt-3">
+                                {row.sectionOrder.map((sectionKey) => (
+                                  <SortableSectionItem
+                                    key={sectionKey}
+                                    sectionKey={sectionKey}
+                                    isHidden={row.hiddenSections.includes(sectionKey)}
+                                    onToggleHidden={toggleHidden}
+                                  />
+                                ))}
+                              </div>
+                            </SortableContext>
+                          </DndContext>
+                        )}
+
+                        <div className="mt-3 d-flex gap-2">
+                          <button
+                            className="btn btn-primary"
+                            disabled={isSaving || !row}
+                            onClick={() => row && saveOrder(row.sectionOrder, row.hiddenSections)}
                           >
-                            ↓
-                          </Button>
+                            {isSaving ? "Salvando..." : "Salvar"}
+                          </button>
+                          <button
+                            className="btn btn-outline-secondary"
+                            disabled={isSaving || !row}
+                            onClick={restoreDefault}
+                          >
+                            Restaurar padrão
+                          </button>
                         </div>
-                      </ListGroup.Item>
-                    ))}
-                  </ListGroup>
-
-                  <div className="mt-3 d-flex gap-2">
-                    <Button
-                      variant="primary"
-                      disabled={isSaving || !row}
-                      onClick={() => row && saveOrder(row.sectionOrder)}
-                    >
-                      {isSaving ? "Salvando..." : "Salvar"}
-                    </Button>
-                    <Button variant="outline-secondary" disabled={isSaving || !row} onClick={restoreDefault}>
-                      Restaurar padrão
-                    </Button>
-                  </div>
-                </Tab>
-              );
-            }
-          )}
-        </Tabs>
-      )}
+                      </Tab>
+                    );
+                  }
+                )}
+              </Tabs>
+            )}
+          </div>
+        </div>
+      </div>
     </LayoutDefault>
   );
 }
