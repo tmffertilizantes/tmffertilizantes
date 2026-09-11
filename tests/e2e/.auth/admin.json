@@ -1,0 +1,25 @@
+{
+  "cookies": [
+    {
+      "name": "USER_TOKEN",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoicWEtc3VwZXJhZG1pbkB0bWYudGVzdCIsImlhdCI6MTc4ODkyMjYyMywiZXhwIjoyMTA0NDk4NjIzfQ.yKz9dz6Q4UGwf_D4DpKzXCl2rrsZ3moYR3V8Wmv1q9E",
+      "domain": "127.0.0.1",
+      "path": "/",
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax",
+      "expires": -1
+    },
+    {
+      "name": "user",
+      "value": "{\"id\":932,\"email\":\"qa-superadmin@tmf.test\",\"name\":\"SA BitGrow\",\"confirmationCode\":null,\"authCode\":null,\"status\":\"approved\",\"active\":true,\"phone\":null,\"identification\":null,\"roleId\":1,\"cityId\":1,\"stateId\":1,\"activatedAt\":null,\"createdAt\":\"2022-09-16T20:34:12.277Z\",\"updatedAt\":\"2026-09-03T18:44:24.081Z\",\"deletedAt\":null,\"userPreferencesId\":null,\"role\":{\"id\":1,\"name\":\"super-admin\"},\"city\":{\"id\":1,\"name\":\"Acrelândia\",\"active\":null,\"stateId\":1},\"state\":{\"id\":1,\"name\":\"Acre\",\"active\":true,\"country\":\"br\"},\"consultant\":null,\"preferences\":null}",
+      "domain": "127.0.0.1",
+      "path": "/",
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax",
+      "expires": -1
+    }
+  ],
+  "origins": []
+}
