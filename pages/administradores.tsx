@@ -106,6 +106,11 @@ const Page: NextPage = () => {
       placeholder: "email@email.com.br",
     },
     {
+      field: "phone",
+      label: "Telefone",
+      placeholder: "(11) 91234-5678",
+    },
+    {
       field: "password",
       label: "Senha",
       type: "password",

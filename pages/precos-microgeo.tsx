@@ -13,6 +13,11 @@ interface CustomComponent {
   setPost: Function;
 }
 
+const ROLE_LABELS: Record<string, string> = {
+  start: "Microgeo Start",
+  reposicao: "Microgeo Reposição",
+};
+
 const handleFileB64 = (
   event: React.ChangeEvent<HTMLInputElement>,
   setPost: any
@@ -28,61 +33,63 @@ const handleFileB64 = (
   reader.readAsDataURL(file);
 };
 
-export default function BioEstacoes() {
+export default function ProdutosMicrogeo() {
   const { token = "" } = useGlobal();
-  const url = `${process.env.API_URL}/bioStation`;
+  const url = `${process.env.API_URL}/microgeoPrice`;
 
   const fields = [
     {
       field: "name",
       label: "Nome",
-      placeholder: "Nome da bio estação",
+      placeholder: "Ex.: Microgeo Start",
     },
     {
       Component: ({ post, setPost }: CustomComponent) => (
         <div className="mb-3">
-          <label className="form-label" htmlFor="description">
-            Descrição
+          <label className="form-label" htmlFor="role">
+            Produto
           </label>
-          <textarea
-            value={post?.description || ""}
+          <select
+            id="role"
+            className="form-select"
+            value={post?.role || ""}
             onChange={(e) =>
-              setPost((post: any) => ({
-                ...post,
-                description: e.target.value,
-              }))
+              setPost((post: any) => ({ ...post, role: e.target.value }))
             }
-            id="description"
-            className="form-control"
-            placeholder="Descrição da bio estação"
-          />
+          >
+            <option value="" disabled>
+              Selecione…
+            </option>
+            <option value="start">Microgeo Start</option>
+            <option value="reposicao">Microgeo Reposição</option>
+          </select>
         </div>
       ),
     },
     {
       Component: ({ post, setPost }: CustomComponent) => (
         <div className="mb-3">
-          <label className="form-label" htmlFor="capacidadeLitros">
-            Capacidade (litros)
+          <label className="form-label" htmlFor="custoPorKg">
+            Custo (R$/kg)
           </label>
           <input
-            value={post?.capacidadeLitros ?? ""}
+            value={post?.custoPorKg ?? ""}
             onChange={(e) =>
               setPost((post: any) => ({
                 ...post,
-                capacidadeLitros:
-                  e.target.value === "" ? null : Number(e.target.value),
+                custoPorKg:
+                  e.target.value === "" ? 0 : Number(e.target.value),
               }))
             }
             type="number"
             min={0}
-            step={1}
-            id="capacidadeLitros"
+            step="0.01"
+            id="custoPorKg"
             className="form-control"
-            placeholder="Ex.: 80000"
+            placeholder="Ex.: 60"
           />
           <small className="text-muted">
-            Usado no dimensionamento da Bio Estação (BEM) no aplicativo.
+            Usado no orçamento do dimensionamento da Bio Estação (BEM) no aplicativo.
           </small>
         </div>
       ),
@@ -126,15 +133,23 @@ export default function BioEstacoes() {
           sortType: "basic",
         },
         {
-          Header: "Capacidade (L)",
-          accessor: "capacidadeLitros",
+          Header: "Produto",
+          accessor: "role",
           Filter: NoFilter,
-          Cell: ({ value = null }) =>
-            value ? (
-              <span>{Number(value).toLocaleString("pt-BR")}</span>
-            ) : (
-              <span>-</span>
-            ),
+          Cell: ({ value = "" }) => <span>{ROLE_LABELS[value] || value}</span>,
+        },
+        {
+          Header: "Custo (R$/kg)",
+          accessor: "custoPorKg",
+          Filter: NoFilter,
+          Cell: ({ value = 0 }) => (
+            <span>
+              {Number(value).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </span>
+          ),
         },
         {
           Header: "Imagem",
@@ -171,7 +186,7 @@ export default function BioEstacoes() {
                   onClick={() => {
                     if (
                       window.confirm(
-                        `Tem certeza que deseja remover a bio estação "${currentPost.name}"?`
+                        `Tem certeza que deseja remover o produto "${currentPost.name}"?`
                       )
                     ) {
                       onRemove(value);
@@ -191,19 +206,19 @@ export default function BioEstacoes() {
           url,
           token,
           fetcherDataFn: (response: AxiosResponse) => {
-            return response.data.bioStations;
+            return response.data.microgeoPrices;
           },
         }}
         tableConfig={{
           columnsFn,
         }}
         formConfig={{
-          insertTitle: "Adicionar Bio Estação",
-          editTitle: "Editar Bio Estação",
+          insertTitle: "Adicionar Produto Microgeo",
+          editTitle: "Editar Produto Microgeo",
           fields,
         }}
         pageConfig={{
-          pageTitle: "Bio Estações",
+          pageTitle: "Produtos Microgeo",
         }}
       />
     </LayoutDefault>

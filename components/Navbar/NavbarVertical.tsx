@@ -113,6 +113,14 @@ export default function NavBar() {
           </li>
 
           <li className="nav-item">
+            <Link href="/precos-microgeo">
+              <a className="nav-link">
+                <i className="nav-icon fe fe-dollar-sign me-2"></i>Produtos Microgeo
+              </a>
+            </Link>
+          </li>
+
+          <li className="nav-item">
             <Link href="/culturas">
               <a className="nav-link">
                 <i className="nav-icon fe fe-feather me-2"></i>Culturas
