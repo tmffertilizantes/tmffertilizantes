@@ -74,8 +74,6 @@ interface User {
 }
 
 interface Consultor {
-  formRegion?: string;
-  formResale?: string;
   id?: number;
   resale?: string;
   resaleId?: number;
@@ -380,34 +378,9 @@ export default function Consultores() {
       ),
     },
     {
-      Component: ({ post }: CustomComponent) => {
-        const resaleName =
-          resales_as_options?.find(
-            (resale: any) => String(resale.value) === String(post.formResale)
-          )?.label ?? "Não encontrado";
-
-        return (
-          <div className="mb-3 opacity-60">
-            <label className="form-label" htmlFor="formResale">
-              Revenda Informada pelo Usuário
-            </label>
-
-            <input
-              value={resaleName}
-              disabled
-              readOnly
-              type="text"
-              id="formResale"
-              className="form-control"
-            />
-          </div>
-        );
-      },
-    },
-    {
       Component: ({ post, setPost }: CustomComponent) => (
         <div>
-          <label className="form-label">Revenda selecionada pelo ADM</label>
+          <label className="form-label">Revenda</label>
 
           <Select
             value={resales_as_options.find(
@@ -428,34 +401,9 @@ export default function Consultores() {
       ),
     },
 {
-      Component: ({ post }: CustomComponent) => {
-        const regionName =
-          regions_as_options?.find(
-            (region: any) => String(region.value) === String(post.formRegion)
-          )?.label ?? "Não encontrado";
-
-        return (
-          <div className="mb-3 opacity-60">
-            <label className="form-label" htmlFor="formRegion">
-              Região Informada pelo Usuário
-            </label>
-
-            <input
-              value={regionName}
-              disabled
-              readOnly
-              type="text"
-              id="formRegion"
-              className="form-control"
-            />
-          </div>
-        );
-      },
-    },
-    {
       Component: ({ post, setPost }: CustomComponent) => (
         <div>
-          <label className="form-label">Região selecionada pelo ADM</label>
+          <label className="form-label">Região</label>
 
           <Select
             value={regions_as_options.find(
@@ -502,8 +450,6 @@ export default function Consultores() {
       const updateConsultant = axios.patch(
         `${process.env.API_URL}/consultant/${post.id}`,
         {
-          formResale: post.formResale,
-          formRegion: post.formRegion,
           resaleId: post.resaleId,
           regionId: post.regionId,
         },
@@ -701,9 +647,6 @@ export default function Consultores() {
                 identification: consultant.user?.identification ?? "",
                 phone: consultant.user?.phone ?? "",
                 status: consultant.user?.status ?? "",
-
-                formRegion: consultant.formRegion,
-                formResale: consultant.formResale,
 
                 region: consultant.region?.name ?? "",
                 resale: consultant.resale?.name ?? "",

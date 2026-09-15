@@ -26,8 +26,6 @@ interface User {
 }
 
 interface Consultor {
-  formRegion?: string;
-  formResale?: string;
   id?: number;
   resale?: string;
   resaleId?: number;
