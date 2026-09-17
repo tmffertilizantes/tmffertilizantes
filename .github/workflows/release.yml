@@ -86,13 +86,6 @@ jobs:
           API_URL: ${{ secrets.API_URL }}
         run: npm run build
 
-      - name: Deploy to Cloudflare Pages (homolog)
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy out --project-name=${{ secrets.CF_PAGES_PROJECT_NAME }} --branch=main
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
