@@ -60,14 +60,12 @@ jobs:
           node-version: "20.19.0"
 
       - name: Install dependencies
-        run: |
-          corepack enable
-          yarn install --immutable
+        run: npm ci
 
       - name: Build (production)
         env:
           API_URL: ${{ secrets.API_URL }}
-        run: yarn build
+        run: npm run build
 
       - name: Deploy to Cloudflare Pages (production)
         uses: cloudflare/wrangler-action@v3

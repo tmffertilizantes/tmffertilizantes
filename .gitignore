@@ -36,6 +36,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# outros gerenciadores de pacote (padronizado em npm)
+yarn.lock
+.yarn
+.yarnrc.yml
+pnpm-lock.yaml
+
 # testes E2E
 playwright-report/
 test-results/
