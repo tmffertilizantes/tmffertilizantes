@@ -1,0 +1,77 @@
+name: Deploy Production
+
+# Deploy manual para produção: escolha qualquer tag já publicada (criada
+# pelo workflow "Release & Deploy Homolog"), builda o export estático com a
+# API_URL de produção e publica no projeto de produção do Cloudflare Pages.
+# Rodar de novo escolhendo uma tag anterior É o mecanismo de rollback.
+#
+# Assim como no homolog, o deploy automático por Git do projeto de produção
+# no Cloudflare Pages precisa estar desligado — só este workflow publica em
+# produção.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Tag a implantar em produção (ex.: v1.8.0). Se não souber qual, rode mesmo assim: as últimas tags disponíveis aparecem no log do job 'validate'."
+        required: true
+        type: string
+
+concurrency:
+  group: tmf-frontend-production
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.check.outputs.tag }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: List recent tags
+        run: git tag --sort=-creatordate | head -15
+
+      - name: Validate tag exists
+        id: check
+        run: |
+          if ! git rev-parse --verify --quiet "refs/tags/${{ inputs.version }}" > /dev/null; then
+            echo "::error::Tag '${{ inputs.version }}' não encontrada. Veja a lista de tags recentes no passo anterior ('List recent tags')."
+            exit 1
+          fi
+          echo "tag=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: validate
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.validate.outputs.tag }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.19.0"
+
+      - name: Install dependencies
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - name: Build (production)
+        env:
+          API_URL: ${{ secrets.API_URL }}
+        run: yarn build
+
+      - name: Deploy to Cloudflare Pages (production)
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy out --project-name=${{ secrets.CF_PAGES_PROJECT_NAME }} --branch=main

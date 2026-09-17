@@ -23,7 +23,12 @@ import { CSS } from "@dnd-kit/utilities";
 
 interface ResultSectionOrder {
   id: number;
-  analysisType: "nutrition" | "fertility" | "tmfVsCompetitor" | "productionCost";
+  analysisType:
+    | "nutrition"
+    | "fertility"
+    | "tmfVsCompetitor"
+    | "productionCost"
+    | "bemSizing";
   sectionOrder: string[];
   hiddenSections: string[];
   createdAt: string;
@@ -35,6 +40,7 @@ const ANALYSIS_TYPE_LABELS: Record<ResultSectionOrder["analysisType"], string> =
   fertility: "Fertilidade e Construção de Perfil de Solo",
   tmfVsCompetitor: "Investimento TMF x Concorrente",
   productionCost: "Custo de Produção",
+  bemSizing: "Dimensionamento de Bio Estação (BEM)",
 };
 
 const SECTION_LABELS: Record<string, string> = {
@@ -48,6 +54,10 @@ const SECTION_LABELS: Record<string, string> = {
   competitorCostDetail: "Detalhamento do custo concorrente",
   tmfInvestmentDetail: "Detalhamento do investimento TMF",
   comparisonDetail: "Detalhamento da comparação de produtividade/custo",
+  recommendedModel: "Modelo de Bio Estação recomendado",
+  recommendedInputs: "Insumos recomendados",
+  indicators: "Indicadores",
+  budget: "Orçamento Final",
 };
 
 const DEFAULT_ORDER_BY_TYPE: Record<ResultSectionOrder["analysisType"], string[]> = {
@@ -68,6 +78,7 @@ const DEFAULT_ORDER_BY_TYPE: Record<ResultSectionOrder["analysisType"], string[]
   ],
   tmfVsCompetitor: ["comparisonHighlight", "competitorCostDetail", "tmfInvestmentDetail"],
   productionCost: ["comparisonHighlight", "comparisonDetail"],
+  bemSizing: ["recommendedModel", "recommendedInputs", "indicators", "summary", "budget"],
 };
 
 function SortableSectionItem({
